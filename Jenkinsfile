@@ -54,7 +54,7 @@ node {
     stage('Testing') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging ' +
+            sh './pushevent.sh SERVICE Environment Service Sample-NodeJs-Service ' +
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -70,7 +70,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging '+
+            sh './pushevent.sh SERVICE Environment Service Sample-NodeJs-Service '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -86,7 +86,7 @@ node {
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-cli') {
             sh 'python3 dtcli.py dqlr srv tags/CONTEXTLESS:DockerService=SampleNodeJsStaging '+
-                        'service.responsetime[avg%hour],service.responsetime[p90%hour] ${DT_URL} ${DT_TOKEN}'
+                        'service.responsetime[avg%hour],service.responsetime[p90%hour]'
             sh 'mv dqlreport.html dqlstagingreport.html'
             archiveArtifacts artifacts: 'dqlstagingreport.html', fingerprint: true
             
@@ -127,7 +127,7 @@ node {
     stage('WarmUpProduction') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsProduction '+
+            sh './pushevent.sh SERVICE Environment Service Sample-NodeJs-Service '+
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test to warm up new prod deployment" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -143,7 +143,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsProduction '+
+            sh './pushevent.sh SERVICE Environment Service Sample-NodeJs-Service '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Production warm up phase" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
