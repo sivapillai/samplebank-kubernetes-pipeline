@@ -54,7 +54,7 @@ node {
     stage('Testing') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE Environment Service Sample-NodeJs-Service ' +
+            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging ' +
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -70,7 +70,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE Environment Service Sample-NodeJs-Service '+
+            sh './pushevent.sh SERVICE Environment CONTEXTLESS DockerService SampleNodeJsStaging '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
