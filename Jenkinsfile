@@ -79,7 +79,7 @@ node {
     stage('ValidateStaging') {
         // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
         dir ('dynatrace-scripts') {
-            DYNATRACE_PROBLEM_COUNT = sh (script: './checkforproblems.sh', returnStatus : true)
+            DYNATRACE_PROBLEM_COUNT = sh 'python checkforproblems.py ${DT_URL} ${DT_TOKEN}'
             echo "Dynatrace Problems Found: ${DYNATRACE_PROBLEM_COUNT}"
         }
         
