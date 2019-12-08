@@ -2,10 +2,9 @@ import sys
 import json
 import requests
 
-DT_URL="https://stg99002.live.dynatrace.com/"
-DT_TOKEN="Ur8ti8_9SLWYpfXSTDNgH"
-
 def main():
+   DT_URL = sys.argv[1]
+   DT_TOKEN = sys.argv[2]
    endpoint = DT_URL + "api/v1/problem/status"
    get_param = {'Accept':'application/json; charset=utf-8', 'Authorization':'Api-Token {}'.format(DT_TOKEN)}
    config_post = requests.get(endpoint, headers = get_param)
