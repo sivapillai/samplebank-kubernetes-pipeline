@@ -70,7 +70,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE Environment CONTEXTLESS DockerService SampleNodeJsStaging '+
+            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
