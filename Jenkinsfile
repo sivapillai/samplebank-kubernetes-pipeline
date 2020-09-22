@@ -25,7 +25,7 @@ node {
     stage('CleanStaging') {
         // The cleanup script makes sure no previous docker staging containers run
         dir ('sample-bank-app-service') {
-            //sh "./cleanup.sh SampleOnlineBankStaging"
+            sh "./cleanup.sh SampleOnlineBankStaging"
         }
     }
     
