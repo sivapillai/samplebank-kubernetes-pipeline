@@ -17,7 +17,7 @@ node {
 
     stage('Build') {
         // Lets build our docker image
-        dir ('sample-bank-app-service) {
+        dir ('sample-bank-app-service') {
             def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}")
         }
     }
