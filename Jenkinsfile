@@ -32,7 +32,7 @@ node {
     stage('DeployStaging') {
         // Lets deploy the previously build container
         def app = docker.image("sample-nodejs-service:${BUILD_NUMBER}")
-        app.run("--name SampleNodeJsStaging -p 90:80 " +
+        app.run("--name SampleNodeJsStaging -p 80:80 " +
                 "-e 'DT_CLUSTER_ID=SampleNodeJsStaging' " + 
                 "-e 'DT_TAGS=Environment=Staging Service=Sample-NodeJs-Service' " +
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
