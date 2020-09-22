@@ -7,7 +7,7 @@ node {
  
     stage('Checkout') {
         // Checkout our application source code
-        git url: 'https://github.com/nikhilgoenkatech/jenkins-dynatrace-pipeline.git'
+        git url: 'https://github.com/nikhilgoenkatech/JenkinsBankApp.git'
         
         // into a dynatrace-cli subdirectory we checkout the CLI
         dir ('dynatrace-cli') {
