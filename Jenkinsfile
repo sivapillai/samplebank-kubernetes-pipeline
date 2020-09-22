@@ -63,7 +63,7 @@ node {
         dir ('sample-nodejs-service-tests') {
             // start load test and run for 120 seconds - simulating traffic for Staging enviornment on port 80
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "./loadtest.sh 80 stagingloadtest.log stagingloadtestcontrol.txt 120 Staging"
+            sh "./loadtest.sh 3000 stagingloadtest.log stagingloadtestcontrol.txt 1 Staging"
             
             archiveArtifacts artifacts: 'stagingloadtest.log', fingerprint: true
         }
@@ -99,14 +99,14 @@ node {
     
     stage('DeployProduction') {
         // first we clean production
-        dir ('sample-nodejs-service') {
-            sh "./cleanup.sh SampleNodeJsProduction"
+        dir ('sample-bank-app-service') {
+            sh "./cleanup.sh SampleOnlineBankStaging"
         }
 
         // now we deploy the new container
-        def app = docker.image("sample-nodejs-service:${BUILD_NUMBER}")
-        app.run("--name SampleNodeJsProduction -p 90:80 "+
-                "-e 'DT_CLUSTER_ID=SampleNodeJsProduction' "+
+        def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
+        app.run("--name SampleOnlineBankStaging -p 3000:3000 "+
+                "-e 'DT_CLUSTER_ID=SampleOnlineBankProduction' "+
                 "-e 'DT_TAGS=Environment=Production Service=Sample-NodeJs-Service' "+
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Production JOB_NAME=${JOB_NAME} "+
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}'")
