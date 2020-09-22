@@ -7,7 +7,7 @@ node {
  
     stage('Checkout') {
         // Checkout our application source code
-        git url: 'https://github.com/dynatrace-innovationlab/jenkins-dynatrace-pipeline-tutorial.git'
+        git url: 'https://github.com/nikhilgoenkatech/jenkins-dynatrace-pipeline.git'
         
         // into a dynatrace-cli subdirectory we checkout the CLI
         dir ('dynatrace-cli') {
@@ -17,23 +17,23 @@ node {
 
     stage('Build') {
         // Lets build our docker image
-        dir ('sample-nodejs-service') {
-            def app = docker.build("sample-nodejs-service:${BUILD_NUMBER}")
+        dir ('sample-bank-app-service) {
+            def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}")
         }
     }
     
     stage('CleanStaging') {
         // The cleanup script makes sure no previous docker staging containers run
-        dir ('sample-nodejs-service') {
-            //sh "./cleanup.sh SampleNodeJsStaging"
+        dir ('sample-bank-app-service') {
+            //sh "./cleanup.sh SampleOnlineBankStaging"
         }
     }
     
     stage('DeployStaging') {
         // Lets deploy the previously build container
-        def app = docker.image("sample-nodejs-service:${BUILD_NUMBER}")
-        app.run("--name SampleNodeJsStaging -p 80:80 " +
-                "-e 'DT_CLUSTER_ID=SampleNodeJsStaging' " + 
+        def app = docker.image("sample-bank-app-service:${BUILD_NUMBER}")
+        app.run("--name SampleOnlineBankStaging -p 80:80 " +
+                "-e 'DT_CLUSTER_ID=SampleOnlineBankStaging' " + 
                 "-e 'DT_TAGS=Environment=Staging Service=Sample-NodeJs-Service' " +
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}'")
@@ -45,7 +45,7 @@ node {
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
             // now I push one on the actual service (it has the tags from our rules)
-            sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging ' + 
+            sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' + 
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }    
@@ -54,7 +54,7 @@ node {
     stage('Testing') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging ' +
+            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' +
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -70,7 +70,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleNodeJsStaging '+
+            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -85,13 +85,13 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-cli') {
-            sh 'python3 dtcli.py dqlr srv tags/CONTEXTLESS:DockerService=SampleNodeJsStaging '+
+            sh 'python3 dtcli.py dqlr srv tags/CONTEXTLESS:DockerService=SampleOnlineBankStaging '+
                         'service.responsetime[avg%hour],service.responsetime[p90%hour]'
             sh 'mv dqlreport.html dqlstagingreport.html'
             archiveArtifacts artifacts: 'dqlstagingreport.html', fingerprint: true
             
             // get the link to the service's dashboard and make it an artifact
-            sh 'python3 dtcli.py link srv tags/CONTEXTLESS:DockerService=SampleNodeJsStaging '+
+            sh 'python3 dtcli.py link srv tags/CONTEXTLESS:DockerService=SampleOnlineBankStaging '+
                         'overview 60:0 ${DT_URL} ${DT_TOKEN} > dtstagelinks.txt'
             archiveArtifacts artifacts: 'dtstagelinks.txt', fingerprint: true
         }
