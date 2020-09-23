@@ -106,7 +106,7 @@ node {
 
         // now we deploy the new container
         def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
-        app.run("--name SampleOnlineBankProduction -p 3000:3000 "+
+        app.run("--name SampleOnlineBankProduction -p 3010:3000 "+
                 "-e 'DT_CLUSTER_ID=SampleOnlineBankProduction' "+
                 "-e 'DT_TAGS=Environment=Production Service=Sample-NodeJs-Service' "+
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Production JOB_NAME=${JOB_NAME} "+
