@@ -6,7 +6,7 @@ def clean_container():
      dic={}
      dic["name"] = sys.argv[1]
      client = docker.APIClient(base_url='unix://var/run/docker.sock')
-     list_container = client.containers(filters=dic)
+     list_container = client.containers(all=True, filters=dic)
 
      for container in list_container:
        client.kill(container["Id"])
