@@ -12,6 +12,7 @@ def clean_container():
        if container["State"] == "running":
           client.kill(container["Id"])
        client.remove_image(container["Image"],force=1)
+       client.remove_container(container, force=1)
 
    except Exception as e:
      return 
