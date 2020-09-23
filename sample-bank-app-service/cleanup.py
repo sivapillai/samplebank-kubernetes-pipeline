@@ -9,7 +9,8 @@ def clean_container():
      list_container = client.containers(all=True, filters=dic)
 
      for container in list_container:
-       client.kill(container["Id"])
+       if container["State"] == "Running":
+          client.kill(container["Id"])
        client.remove_image(container["Image"],force=1)
 
    except Exception as e:
