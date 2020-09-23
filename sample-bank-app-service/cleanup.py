@@ -19,6 +19,5 @@ def clean_container():
      return "Cleaned the containers successfully"
 
 if __name__ == "__main__":
-    print("Call")
     msg = clean_container()
     exit(msg)
