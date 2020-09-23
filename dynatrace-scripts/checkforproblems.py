@@ -11,7 +11,3 @@ def main():
    jsonObj = json.loads(config_post.text)
    problem = jsonObj["result"]["totalOpenProblemsCount"]
    return problem
-
-if __name__=="__main__":
-    val = main()
-    return val
