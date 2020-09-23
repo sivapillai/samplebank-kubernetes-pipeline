@@ -25,7 +25,7 @@ node {
     stage('CleanStaging') {
         // The cleanup script makes sure no previous docker staging containers run
         dir ('sample-bank-app-service') {
-            sh "./cleanup.sh SampleOnlineBankStaging"
+            sh "python3 cleanup.py SampleOnlineBankStaging"
         }
     }
     
@@ -100,7 +100,7 @@ node {
     stage('DeployProduction') {
         // first we clean production
         dir ('sample-bank-app-service') {
-            sh "./cleanup.sh SampleOnlineBankStaging"
+            sh "python3 cleanup.py SampleOnlineBankStaging"
         }
 
         // now we deploy the new container
