@@ -158,7 +158,7 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-cli') {
-            sh 'python3 dtcli.py dqlr srv tags/CONTEXTLESS:DockerService=SampleNodeJsProduction '+
+            sh 'python3 dtcli.py dqlr srv tags/CONTEXTLESS:DockerService=SampleOnlineBankProduction '+
                'service.responsetime[avg%hour],service.responsetime[p90%hour] ${DT_URL} ${DT_TOKEN}'
             sh 'mv dqlreport.html dqlproductionreport.html'
             archiveArtifacts artifacts: 'dqlproductionreport.html', fingerprint: true
