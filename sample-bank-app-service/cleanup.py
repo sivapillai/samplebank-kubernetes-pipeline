@@ -13,11 +13,10 @@ def clean_container():
        client.remove_image(container["Image"],force=1)
 
    except Exception as e:
-     return "Exception encountered"
+     return 
 
    finally:
-     return "Cleaned the containers successfully"
+     return
 
 if __name__ == "__main__":
-    msg = clean_container()
-    exit(msg)
+    clean_container()
