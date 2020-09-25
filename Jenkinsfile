@@ -84,7 +84,7 @@ node {
         }
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
-        dir ('dynatrace-cli') {
+        dir ('dynatrace-scripts') {
             sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService=SampleOnlineBankStaging '+
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_staging.csv'
@@ -157,7 +157,7 @@ node {
         }
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
-        dir ('dynatrace-cli') {
+        dir ('dynatrace-scripts') {
             sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService=SampleOnlineBankStaging '+
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_prod.csv'
