@@ -85,10 +85,10 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-cli') {
-            sh 'python3 dtcli.py dqlr srv tags/CONTEXTLESS:DockerService=SampleOnlineBankStaging '+
-                        'service.responsetime[avg%hour],service.responsetime[p90%hour]'
-            sh 'mv dqlreport.html dqlstagingreport.html'
-            archiveArtifacts artifacts: 'dqlstagingreport.html', fingerprint: true
+            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService=SampleOnlineBankStaging '+
+                        'service.responsetime'
+            sh 'mv Test_report.csv Test_report_staging.csv'
+            archiveArtifacts artifacts: 'Test_report_staging.csv', fingerprint: true
             
             // get the link to the service's dashboard and make it an artifact
             //sh 'python3 dtcli.py link srv tags/CONTEXTLESS:DockerService=SampleOnlineBankStaging '+
@@ -158,10 +158,10 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-cli') {
-            sh 'python3 dtcli.py dqlr srv tags/CONTEXTLESS:DockerService=SampleOnlineBankProduction '+
-               'service.responsetime[avg%hour],service.responsetime[p90%hour] ${DT_URL} ${DT_TOKEN}'
-            sh 'mv dqlreport.html dqlproductionreport.html'
-            archiveArtifacts artifacts: 'dqlproductionreport.html', fingerprint: true
+            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService=SampleOnlineBankStaging '+
+                        'service.responsetime'
+            sh 'mv Test_report.csv Test_report_prod.csv'
+            archiveArtifacts artifacts: 'Test_report_prod.csv', fingerprint: true
 
         }
     }    
