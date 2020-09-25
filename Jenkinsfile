@@ -85,7 +85,7 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-scripts') {
-            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService=SampleOnlineBankStaging '+
+            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging '+
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_staging.csv'
             archiveArtifacts artifacts: 'Test_report_staging.csv', fingerprint: true
@@ -158,7 +158,7 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-scripts') {
-            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService=SampleOnlineBankStaging '+
+            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging '+
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_prod.csv'
             archiveArtifacts artifacts: 'Test_report_prod.csv', fingerprint: true
