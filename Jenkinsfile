@@ -58,7 +58,7 @@ node {
         dir ('sample-nodejs-service-tests') {
             // start load test and run for 120 seconds - simulating traffic for Staging enviornment on port 80
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "./loadtest.sh 3000 stagingloadtest.log stagingloadtestcontrol.txt 1 Staging"
+            sh "python3 loadtest.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log"
             
             archiveArtifacts artifacts: 'stagingloadtest.log', fingerprint: true
         }
@@ -127,8 +127,7 @@ node {
         dir ('sample-nodejs-service-tests') {
             // start load test and run for 120 seconds - simulating traffic for Production enviornment on port 90
             sh "rm -f productionloadtest.log productionloadtestcontrol.txt"
-            sh "./loadtest.sh 90 productionloadtest.log productionloadtestcontrol.txt 60 Production"
-            
+            sh "python3 loadtest.py 3000 100 ${BUILD_NUMBER} productionloadtest.log"
             archiveArtifacts artifacts: 'productionloadtest.log', fingerprint: true
         }
 
