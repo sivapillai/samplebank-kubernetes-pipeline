@@ -125,7 +125,7 @@ node {
         dir ('sample-nodejs-service-tests') {
             // start load test and run for 120 seconds - simulating traffic for Production enviornment on port 90
             sh "rm -f productionloadtest.log productionloadtestcontrol.txt"
-            sh "python3 loadtest.py 3010 100 ${BUILD_NUMBER} productionloadtest.log"
+            sh "python3 loadtest.py 3000 100 ${BUILD_NUMBER} productionloadtest.log"
             archiveArtifacts artifacts: 'productionloadtest.log', fingerprint: true
         }
 
