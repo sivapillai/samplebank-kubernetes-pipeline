@@ -3,14 +3,13 @@ import time
 import logging 
 import requests
 
-def load_test(port, no_of_requests, logger):
+def load_test(port, no_of_requests, logger,test_hostname):
   try:
     logger.debug("Starting load-test for login request")
-    machine_ip='SampleOnlineBankStaging'
     endpoint='/login/'
     
     header_value="LoadTestId=" + job_name + ";request=login"
-    http_req = "http://" + machine_ip + ":" + port + endpoint
+    http_req = "http://" + test_hostname + ":" + port + endpoint
     header = {'x-dynatrace-test':header_value}
     
     for i in range(int(no_of_requests)):
@@ -31,7 +30,8 @@ if __name__=="__main__":
    no_of_requests = sys.argv[2]
    log_file = sys.argv[4]
    job_name = sys.argv[3]
-
+   test_hostname = sys.argv[5]
+    
    logging.basicConfig(filename=log_file,
                                 filemode='w',
                                 format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
@@ -39,6 +39,6 @@ if __name__=="__main__":
                                 level=logging.DEBUG)
    logger = logging.getLogger()
    logger.debug("------------------------Commencing load tests----------------------------")
-   load_test(port, no_of_requests, logger)
+   load_test(port, no_of_requests, logger, test_hostname)
    logger.debug("------------------------load test completed----------------------------")
    logging.shutdown()
