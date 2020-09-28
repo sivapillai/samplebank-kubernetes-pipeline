@@ -6,7 +6,7 @@ import requests
 def load_test(port, no_of_requests, logger):
   try:
     logger.debug("Starting load-test for login request")
-    machine_ip='localhost'
+    machine_ip='0.0.0.0'
     endpoint='/login/'
     
     header_value="LoadTestId=" + job_name + ";request=login"
@@ -29,8 +29,8 @@ def load_test(port, no_of_requests, logger):
 if __name__=="__main__":
    port = sys.argv[1]
    no_of_requests = sys.argv[2]
-   log_file = sys.argv[3]
-   job_name = sys.argv[4]
+   log_file = sys.argv[4]
+   job_name = sys.argv[3]
 
    logging.basicConfig(filename=log_file,
                                 filemode='w',
