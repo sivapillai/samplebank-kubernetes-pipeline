@@ -8,11 +8,6 @@ node {
     stage('Checkout') {
         // Checkout our application source code
         git url: 'https://github.com/nikhilgoenkatech/JenkinsBankApp.git'
-        
-        // into a dynatrace-cli subdirectory we checkout the CLI
-        dir ('dynatrace-cli') {
-            git url: 'https://github.com/Dynatrace/dynatrace-cli.git'
-        }
     }
 
     stage('Build') {
@@ -79,7 +74,7 @@ node {
     stage('ValidateStaging') {
         // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
         dir ('dynatrace-scripts') {
-            DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN}'
+            DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'
             echo "Dynatrace Problems Found: ${DYNATRACE_PROBLEM_COUNT}"
         }
         
@@ -89,11 +84,6 @@ node {
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_staging.csv'
             archiveArtifacts artifacts: 'Test_report_staging.csv', fingerprint: true
-            
-            // get the link to the service's dashboard and make it an artifact
-            //sh 'python3 dtcli.py link srv tags/CONTEXTLESS:DockerService=SampleOnlineBankStaging '+
-            //            'overview 60:0 ${DT_URL} ${DT_TOKEN} > dtstagelinks.txt'
-            //archiveArtifacts artifacts: 'dtstagelinks.txt', fingerprint: true
         }
     }
     
