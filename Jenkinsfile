@@ -89,7 +89,7 @@ node {
     stage('DeployProduction') {
         // first we clean production
         dir ('sample-bank-app-service') {
-            sh "python3 cleanup.py SampleOnlineBankStaging"
+            sh "python3 cleanup.py SampleOnlineBankProduction"
         }
 
         // now we deploy the new container
