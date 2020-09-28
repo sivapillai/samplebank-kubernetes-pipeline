@@ -27,4 +27,4 @@ if __name__ == "__main__":
    tag_info = sys.argv[3]
 
    problem_count = check_problem(DT_URL, DT_TOKEN, tag_info)
-   return problem_count
+   sys.exit(problem_count)
