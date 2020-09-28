@@ -116,7 +116,7 @@ node {
     stage('WarmUpProduction') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE Environment Service Sample-NodeJs-Service '+
+            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test to warm up new prod deployment" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -131,7 +131,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE Environment Service Sample-NodeJs-Service '+
+            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Production warm up phase" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
