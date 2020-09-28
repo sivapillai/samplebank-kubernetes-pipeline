@@ -6,7 +6,7 @@ import requests
 def load_test(port, no_of_requests, logger):
   try:
     logger.debug("Starting load-test for login request")
-    machine_ip='0.0.0.0'
+    machine_ip='SampleOnlineBankStaging'
     endpoint='/login/'
     
     header_value="LoadTestId=" + job_name + ";request=login"
