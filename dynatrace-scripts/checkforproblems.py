@@ -5,7 +5,7 @@ import requests
 
 def check_problem(DT_URL, DT_TOKEN, tag_info):
 
-   endpoint = DT_URL + "api/v1/problem/feed?relativeTime=day&tag=" + tag_info
+   endpoint = DT_URL + "/api/v1/problem/feed?relativeTime=day&tag=" + tag_info
    get_param = {'Accept':'application/json; charset=utf-8', 'Authorization':'Api-Token {}'.format(DT_TOKEN)}
    config_post = requests.get(endpoint, headers = get_param)
    jsonObj = json.loads(config_post.text)
