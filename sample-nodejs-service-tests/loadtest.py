@@ -41,3 +41,4 @@ if __name__=="__main__":
    logger.debug("------------------------Commencing load tests----------------------------")
    load_test(port, no_of_requests, logger)
    logger.debug("------------------------load test completed----------------------------")
+   logging.shutdown()
