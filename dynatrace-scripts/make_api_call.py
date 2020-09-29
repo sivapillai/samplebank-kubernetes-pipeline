@@ -25,8 +25,8 @@ def dtApiCall(endpoint, tenant, metric, tag, csv_str):
       seriesData = get_data.json()
 
       for dataSet in seriesData["dataResult"]['dataPoints'].keys():
-        csv_str = csv_str + str(seriesData["dataResult"]['entities'][dataSet]) + "," + str((seriesData["dataResult"]['dataPoints'][dataSet][0][0])/1000) + "," + str(seriesData["dataResult"]['dataPoints'][dataSet][0][1])
-
+        csv_str = csv_str + "\n" + str(seriesData["dataResult"]['entities'][dataSet]) + "," + str((seriesData["dataResult"]['dataPoints'][dataSet][0][0])/1000) + "," + str(seriesData["dataResult"]['dataPoints'][dataSet][0][1])
+        
   except Exception as e:
     traceback.print_exc()
     print("Exception ",  e)
