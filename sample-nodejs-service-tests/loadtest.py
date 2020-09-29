@@ -13,7 +13,7 @@ def load_test(port, no_of_requests, logger,test_hostname):
     header = {'x-dynatrace-test':header_value}
     
     for i in range(int(no_of_requests)):
-      rsp = requests.get(http_req,header)
+      rsp = requests.get(http_req,headers=header)
 
       if rsp.status_code >=400:
         logger.debug("Request failed", rsp.text)
@@ -25,6 +25,7 @@ def load_test(port, no_of_requests, logger,test_hostname):
 
   finally: 
     logger.debug("Completed load-test for login request")
+    
 if __name__=="__main__":
    port = sys.argv[1]
    no_of_requests = sys.argv[2]
