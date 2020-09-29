@@ -42,7 +42,7 @@ def generate_test_report(csv_str):
      print ("Exception", e)
 
 if __name__ == "__main__":
-   query = "api/v1/timeseries/"
+   query = "/api/v1/timeseries/"
 
    tenant = tenant_details()
    metrics_list = metrics_info()
