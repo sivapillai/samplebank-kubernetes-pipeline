@@ -1,10 +1,7 @@
-# JenkinsDynatracePipelineTutorial
-Provides a full End-to-End Delivery Pipeline for a Node.js based Microservice Application using Jenkins Pipelines and Dynatrace. 
-
-![](./images/overview.png)
-
-For more information check out the slide deck that is part of this repo or watch the [101 Jenkins with Dynatrace YouTube Tutorial](https://www.youtube.com/watch?v=-7uWYNXbhig&list=PLqt2rd0eew1YFx9m8dBFSiGYSBcDuWG38&index=3&t=0s)
-
-## Pipeline Details
-The following illustration shows the indivudal pipeline steps and explains the integration points with Dynatrace:
-![](./images/pipelinedetails.png)
+a. Start a pipeline and instrument the same sample bank app in a docker.
+b. Leverage the learning from Phase-I to fire load-tests on the sample app & help DT identify the load-test cycle.
+c. Validate the load-test to qualify if the build can proceed to Production?
+d. Preserve the logs of the load test and pull the critical time-series metrics from the DT and save these as artifacts (so that the app-team can look into it later).
+e. Proceed with Production deployment if the load-test did not run into any issues.
+f. Warm the production by firing some load tests and additional sanity test.
+g. Repeat step(d) for production docker before qualifying the build is suitable to run as production.
