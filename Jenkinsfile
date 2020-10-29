@@ -59,7 +59,7 @@ node {
             // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3 smoke-test.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log SampleOnlineBankStaging"
+            sh "python3 smoke-test.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingloadtest.log', fingerprint: true
         }
 
@@ -82,7 +82,7 @@ node {
             // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3 sanity-test.py 3000 100 ${BUILD_NUMBER} stagingsanitytest.log SampleOnlineBankStaging"
+            sh "python3 sanity-test.py 3000 100 ${BUILD_NUMBER} stagingsanitytest.log ${PUBLIC_IP} SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingsanitytest.log', fingerprint: true
         }
 
@@ -149,7 +149,7 @@ node {
         dir ('sample-bank-app-service-tests') {
             // start load test and run for 120 seconds - simulating traffic for Production enviornment on port 3010 
             sh "rm -f productionloadtest.log productionloadtestcontrol.txt"
-            sh "python3 smoke-test.py 3010 100 ${BUILD_NUMBER} productionloadtest.log SampleOnlineBankProduction"
+            sh "python3 smoke-test.py 3010 100 ${BUILD_NUMBER} productionloadtest.log ${PUBLIC_IP} SampleOnlineBankProduction "
             archiveArtifacts artifacts: 'productionloadtest.log', fingerprint: true
         }
 
