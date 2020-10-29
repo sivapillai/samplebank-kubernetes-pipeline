@@ -34,8 +34,8 @@ node {
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}'")
 
         dir ('dynatrace-scripts') {
-            // push a deployment event on the host with the tag [AWS]Environment:JenkinsTutorial
-            sh './pushdeployment.sh HOST CONTEXTLESS Jenkins ' +
+            // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
+            sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
