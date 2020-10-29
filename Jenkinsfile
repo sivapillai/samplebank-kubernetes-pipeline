@@ -56,7 +56,7 @@ node {
         
         // lets run some test scripts
         dir ('sample-bank-app-service-tests') {
-            // start load test and run for 120 seconds - simulating traffic for Staging enviornment on port 3000 
+            // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
             sh "python3 smoke-test.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log SampleOnlineBankStaging"
@@ -67,6 +67,29 @@ node {
         dir ('dynatrace-scripts') {
             sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
+               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+        }
+
+        // lets push an event to dynatrace that indicates that we START a sanity test
+        dir ('dynatrace-scripts') {
+            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' +
+               '"STARTING Sanity-Test" ${JOB_NAME} "Starting Sanity-test of the Testing stage"' + 
+               ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+        }
+        
+        // lets run some test scripts
+        dir ('sample-bank-app-service-tests') {
+            // start load test - simulating traffic for Staging enviornment on port 3000 
+
+            sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
+            sh "python3 sanity-test.py 3000 100 ${BUILD_NUMBER} stagingsanitytest.log SampleOnlineBankStaging"
+            archiveArtifacts artifacts: 'stagingsanitytest.log', fingerprint: true
+        }
+
+        // lets push an event to dynatrace that indicates that we STOP a load test
+        dir ('dynatrace-scripts') {
+            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging '+
+               '"STOPPING Sanity Test" ${JOB_NAME} "Stopping Sanity-test of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
     }
