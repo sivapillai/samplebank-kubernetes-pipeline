@@ -45,7 +45,7 @@ if __name__=="__main__":
    job_name = sys.argv[3]
    log_file = sys.argv[4]
 
-   test_hostname = "localhost"
+   test_hostname = sys.argv[5]
    logging.basicConfig(filename=log_file,
                                 filemode='w',
                                 format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
