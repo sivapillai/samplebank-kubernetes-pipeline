@@ -55,10 +55,11 @@ node {
         }
         
         // lets run some test scripts
-        dir ('sample-nodejs-service-tests') {
-            // start load test and run for 120 seconds - simulating traffic for Staging enviornment on port 80
+        dir ('sample-bank-app-service-tests') {
+            // start load test and run for 120 seconds - simulating traffic for Staging enviornment on port 3000 
+
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3 loadtest.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log SampleOnlineBankStaging"
+            sh "python3 smoke-test.py 3000 100 ${BUILD_NUMBER} stagingloadtest.log SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingloadtest.log', fingerprint: true
         }
 
@@ -89,6 +90,7 @@ node {
     stage('DeployProduction') {
         // first we clean production
         dir ('sample-bank-app-service') {
+            sh "python3 cleanup.py SampleOnlineBankStaging"
             sh "python3 cleanup.py SampleOnlineBankProduction"
         }
 
@@ -122,10 +124,10 @@ node {
         }
         
         // lets run some test scripts
-        dir ('sample-nodejs-service-tests') {
-            // start load test and run for 120 seconds - simulating traffic for Production enviornment on port 90
+        dir ('sample-bank-app-service-tests') {
+            // start load test and run for 120 seconds - simulating traffic for Production enviornment on port 3010 
             sh "rm -f productionloadtest.log productionloadtestcontrol.txt"
-            sh "python3 loadtest.py 3000 100 ${BUILD_NUMBER} productionloadtest.log SampleOnlineBankProduction"
+            sh "python3 smoke-test.py 3010 100 ${BUILD_NUMBER} productionloadtest.log SampleOnlineBankProduction"
             archiveArtifacts artifacts: 'productionloadtest.log', fingerprint: true
         }
 
@@ -145,7 +147,7 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-scripts') {
-            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging '+
+            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankProduction'+
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_prod.csv'
             archiveArtifacts artifacts: 'Test_report_prod.csv', fingerprint: true
