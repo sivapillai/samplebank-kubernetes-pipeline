@@ -82,7 +82,7 @@ node {
             // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3 sanity-test.py 3000 1 ${BUILD_NUMBER} stagingsanitytest.log ${PUBLIC_IP} SampleOnlineBankStaging"
+            sh "python3 sanity-test.py 3000 10 ${BUILD_NUMBER} stagingsanitytest.log ${PUBLIC_IP} SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingsanitytest.log', fingerprint: true
         }
 
