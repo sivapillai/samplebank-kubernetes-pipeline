@@ -24,7 +24,7 @@ PAYLOAD=$(cat <<EOF
     }
   },
   "type": "BROWSER",
-  "name": "$1",
+  "name": "Nikhil",
   "locations": [
     "GEOLOCATION-9999453BE4BDB3CD"
   ],
@@ -37,8 +37,8 @@ PAYLOAD=$(cat <<EOF
         "wait": {
             "waitFor": "page_complete"
         },
-        "description": "Loading of \"http://"{PUBLIC_IP}":3000\"",
-        "url": "http://"{PUBLIC_IP}":3000"
+        "description": "Loading of \"http://1.2.3.4:3000\"",
+        "url": "http://1.2.3.4:3000"
     }, {
         "type": "click",
         "wait": {
