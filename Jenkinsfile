@@ -43,7 +43,9 @@ node {
             sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' + 
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-        }    
+            
+            sh './synthetic-monitor.sh ${JOB_URL}'
+        }
     }
     
     stage('Testing') {
