@@ -24,7 +24,7 @@ PAYLOAD=$(cat <<EOF
     }
   },
   "type": "BROWSER",
-  "name": "Nikhil",
+  "name": "$1",
   "locations": [
     "GEOLOCATION-9999453BE4BDB3CD"
   ],
@@ -37,8 +37,8 @@ PAYLOAD=$(cat <<EOF
         "wait": {
             "waitFor": "page_complete"
         },
-        "description": "Loading of \"http://1.2.3.4:3000\"",
-        "url": "http://1.2.3.4:3000"
+        "description": "Loading of \"http://{PUBLIC_IP}:3000\"",
+        "url": "http://{PUBLIC_IP}:3000"
     }, {
         "type": "click",
         "wait": {
@@ -223,6 +223,22 @@ PAYLOAD=$(cat <<EOF
                 "value": "a:contains(\"Go Back\")"
             }, {
                 "type": "css",
+                "value": "div:contains(\"WITHDRAW\"):eq(4)"
+            }, {
+                "type": "css",
+                "value": ".btn:eq(2)"
+            }, {
+                "type": "css",
+                "value": "html body:nth-child(8) div:nth-child(3) form div div div:nth-child(3) div:nth-child(2) a:nth-child(2)"
+            }, {
+                "type": "css",
+                "value": "body div.container-fluid form div.jumbotron div.container div.row div.col-md-6 a.btn"
+            }]
+        },
+        "button": 0,
+        "description": "click on \"Go Back\""
+    }, {
+        "type": "click",
         "wait": {
             "waitFor": "page_complete"
         },
@@ -356,9 +372,7 @@ PAYLOAD=$(cat <<EOF
     "example"
   ],
   "events": []
-
-}
-EOF
+}EOF
 )
 echo $PAYLOAD
 curl -H "Content-Type: application/json" -H "Authorization: Api-Token ${DT_TOKEN}" -X POST -d "${PAYLOAD}" ${DT_URL}/api/v1/synthetic/monitors
