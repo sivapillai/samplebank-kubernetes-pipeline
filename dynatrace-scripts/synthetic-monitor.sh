@@ -37,8 +37,8 @@ PAYLOAD=$(cat <<EOF
         "wait": {
             "waitFor": "page_complete"
         },
-        "description": "Loading of \"http://"{PUBLIC_IP}":3000\"",
-        "url": "http://"{PUBLIC_IP}":3000"
+        "description": "Loading of \"http://\"{PUBLIC_IP}\":3000\"",
+        "url": "http://\"{PUBLIC_IP}\":3000"
     }, {
         "type": "click",
         "wait": {
