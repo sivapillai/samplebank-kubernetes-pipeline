@@ -24,7 +24,7 @@ PAYLOAD=$(cat <<EOF
     }
   },
   "type": "BROWSER",
-  "name": "$1$2"-"$3",
+  "name": "$1"="$2"-"$3",
   "locations": [
     "GEOLOCATION-9999453BE4BDB3CD"
   ],
