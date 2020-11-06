@@ -45,6 +45,7 @@ node {
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}'
+            sh './create-dashboard.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}'
         }
     }
     
