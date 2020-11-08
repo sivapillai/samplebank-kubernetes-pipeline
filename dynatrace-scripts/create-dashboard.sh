@@ -6,7 +6,6 @@ PAYLOAD=$(cat <<EOF
         "configurationVersions": [3],
         "clusterVersion": "1.206.47.20201102-132437"
     },
-    "id": "32cda8ad-db8a-41a9-a24c-daaa18cda911",
     "dashboardMetadata": {
         "name": "$1 $2:$3",
         "shared": false,
