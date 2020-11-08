@@ -44,7 +44,10 @@ node {
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
+            // Create a sample synthetic monitor so as to check the UI functionlity
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}'
+            
+            // Create a sample dashboard for the staging stage
             sh './create-dashboard.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}'
         }
     }
@@ -153,6 +156,12 @@ node {
             // start load test and run for 120 seconds - simulating traffic for Production enviornment on port 3010 
             sh "rm -f productionloadtest.log productionloadtestcontrol.txt"
             sh "python3 smoke-test.py 3010 10 ${BUILD_NUMBER} productionloadtest.log ${PUBLIC_IP} SampleOnlineBankProduction "
+            
+            // Create a sample synthetic monitor so as to check the UI functionlity
+            sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}'
+            
+            // Create a sample dashboard for the staging stage
+            sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}'            
             archiveArtifacts artifacts: 'productionloadtest.log', fingerprint: true
         }
 
