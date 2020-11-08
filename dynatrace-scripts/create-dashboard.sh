@@ -9,7 +9,7 @@ PAYLOAD=$(cat <<EOF
     "dashboardMetadata": {
         "name": "$1 $2:$3",
         "shared": false,
-        "owner": "nikhil.goenka@dynatrace.com",
+        "owner": "",
         "sharingDetails": {
             "linkShared": true,
             "published": false
