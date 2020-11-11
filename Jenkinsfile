@@ -45,10 +45,10 @@ node {
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
             // Create a sample synthetic monitor so as to check the UI functionlity
-            sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + '3000'
+            sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3000'
             
             // Create a sample dashboard for the staging stage
-            sh './create-dashboard.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + 'DockerService SampleOnlineBankStaging'
+            sh './create-dashboard.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' DockerService SampleOnlineBankStaging'
         }
     }
     
@@ -143,10 +143,10 @@ node {
         }
 
         // Create a sample synthetic monitor so as to check the UI functionlity
-        sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + '3010'
+        sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
             
         // Create a sample dashboard for the staging stage
-        sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + 'DockerService SampleOnlineBankProduction'    
+        sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' DockerService SampleOnlineBankProduction'    
         
     }    
     
