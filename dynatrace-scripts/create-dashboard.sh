@@ -593,7 +593,7 @@ PAYLOAD=$(cat <<EOF
             },
             "filtersPerEntityType": {
                 "WEB_CHECK": {
-                    "AUTO_TAGS": ["example"]
+                    "AUTO_TAGS": ["$1"]
                 }
             }
         },
