@@ -45,10 +45,10 @@ node {
                'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
             // Create a sample synthetic monitor so as to check the UI functionlity
-            sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}'
+            sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + '3000'
             
             // Create a sample dashboard for the staging stage
-            sh './create-dashboard.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}'
+            sh './create-dashboard.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + 'DockerService SampleOnlineBankStaging'
         }
     }
     
@@ -140,7 +140,14 @@ node {
             sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleNodeJsProduction '+
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-        }    
+        }
+
+        // Create a sample synthetic monitor so as to check the UI functionlity
+        sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + '3010'
+            
+        // Create a sample dashboard for the staging stage
+        sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + 'DockerService SampleOnlineBankProduction'    
+        
     }    
     
     stage('WarmUpProduction') {
@@ -179,13 +186,6 @@ node {
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_prod.csv'
             archiveArtifacts artifacts: 'Test_report_prod.csv', fingerprint: true
-            
-            // Create a sample synthetic monitor so as to check the UI functionlity
-            sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}'
-            
-            // Create a sample dashboard for the staging stage
-            sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}'            
-
         }
     }    
 }
