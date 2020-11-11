@@ -150,7 +150,7 @@ PAYLOAD=$(cat <<EOF
             }, {
                 "type": "css",
                 "value": "html body:nth-child(2) div:nth-child(2) div div:nth-child(2) div:nth-child(2) div input:nth-child(2)"
-                "type": "css",
+             },{ "type": "css",
                 "value": "#password"
             }]
         },
