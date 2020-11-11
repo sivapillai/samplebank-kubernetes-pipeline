@@ -37,8 +37,8 @@ PAYLOAD=$(cat <<EOF
         "wait": {
             "waitFor": "page_complete"
         },
-        "description": "Loading of \"http://${PUBLIC_IP}:3000\"",
-        "url": "http://${PUBLIC_IP}:3000"
+        "description": "Loading of \"http://${PUBLIC_IP}:$4\"",
+        "url": "http://${PUBLIC_IP}:$4"
     }, {
         "type": "click",
         "wait": {
@@ -150,7 +150,6 @@ PAYLOAD=$(cat <<EOF
             }, {
                 "type": "css",
                 "value": "html body:nth-child(2) div:nth-child(2) div div:nth-child(2) div:nth-child(2) div input:nth-child(2)"
-            }, {
                 "type": "css",
                 "value": "#password"
             }]
@@ -369,7 +368,7 @@ PAYLOAD=$(cat <<EOF
     "xhrActionKpm": "VISUALLY_COMPLETE"
   },
   "tags": [
-    "example"
+    "$1"
   ],
   "events": []
 }
