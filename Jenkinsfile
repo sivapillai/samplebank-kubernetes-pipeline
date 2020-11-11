@@ -140,14 +140,14 @@ node {
             sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleNodeJsProduction '+
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-        }
 
-        // Create a sample synthetic monitor so as to check the UI functionlity
-        sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
+            // Create a sample synthetic monitor so as to check the UI functionlity
+           sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
             
-        // Create a sample dashboard for the staging stage
-        sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' DockerService SampleOnlineBankProduction'    
-        
+          // Create a sample dashboard for the staging stage
+          sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' DockerService SampleOnlineBankProduction'    
+            
+        }        
     }    
     
     stage('WarmUpProduction') {
