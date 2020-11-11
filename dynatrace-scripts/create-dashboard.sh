@@ -80,7 +80,7 @@ PAYLOAD=$(cat <<EOF
             },
             "filtersPerEntityType": {
                 "SERVICE": {
-                    "AUTO_TAGS": ["DockerService:SampleOnlineBankStaging"]
+                    "AUTO_TAGS": ["$4:$5"]
                 }
             }
         },
@@ -273,7 +273,7 @@ PAYLOAD=$(cat <<EOF
             },
             "filtersPerEntityType": {
                 "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["DockerService:SampleOnlineBankStaging"]
+                    "AUTO_TAGS": ["$4:$5"]
                 }
             }
         }
@@ -316,7 +316,7 @@ PAYLOAD=$(cat <<EOF
             },
             "filtersPerEntityType": {
                 "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["DockerService:SampleOnlineBankStaging"]
+                    "AUTO_TAGS": ["$4:$5"]
                 }
             }
         }
@@ -362,7 +362,7 @@ PAYLOAD=$(cat <<EOF
             },
             "filtersPerEntityType": {
                 "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["DockerService:SampleOnlineBankStaging"]
+                    "AUTO_TAGS": ["$4:$5"]
                 }
             }
         }
@@ -425,7 +425,7 @@ PAYLOAD=$(cat <<EOF
             },
             "filtersPerEntityType": {
                 "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["DockerService:SampleOnlineBankStaging"]
+                    "AUTO_TAGS": ["$4:$5"]
                 }
             }
         }
@@ -466,7 +466,7 @@ PAYLOAD=$(cat <<EOF
             },
             "filtersPerEntityType": {
                 "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["DockerService:SampleOnlineBankStaging"]
+                    "AUTO_TAGS": ["$4:$5"]
                 }
             }
         }
@@ -646,7 +646,7 @@ PAYLOAD=$(cat <<EOF
             },
             "filtersPerEntityType": {
                 "SYNTHETIC_BROWSER_MONITOR": {
-                    "AUTO_TAGS": ["example"]
+                    "AUTO_TAGS": ["$1"]
                 }
             }
         }
