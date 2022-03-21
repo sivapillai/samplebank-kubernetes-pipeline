@@ -19,9 +19,13 @@ node {
     
     stage('CleanStaging') {
         // The cleanup script makes sure no previous docker staging containers run
-        dir ('sample-bank-app-service') {
-            sh "python3 cleanup.py SampleOnlineBankStaging"
-        }
+        script{
+                def doc_containers = sh(returnStdout: true, script: "docker container ps -aq | grep SampleOnlineBankStaging").replaceAll("\n", " ") 
+                if (doc_containers) {
+                    sh "docker stop ${doc_containers}"
+                    sh "docker rm ${doc_containers}"
+                }
+          }
     }
     
     stage('DeployStaging') {
@@ -118,9 +122,13 @@ node {
     
     stage('DeployProduction') {
         // first we clean production
-        dir ('sample-bank-app-service') {
-            sh "python3 cleanup.py SampleOnlineBankProduction"
-        }
+        script{
+                def doc_containers = sh(returnStdout: true, script: "docker container ps -aq | grep SampleOnlineBankProduction").replaceAll("\n", " ") 
+                if (doc_containers) {
+                    sh "docker stop ${doc_containers}"
+                    sh "docker rm ${doc_containers}"
+              }
+         }
 
         // now we deploy the new container
         def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
