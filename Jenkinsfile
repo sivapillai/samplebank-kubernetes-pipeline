@@ -20,7 +20,7 @@ node {
     stage('CleanStaging') {
         // The cleanup script makes sure no previous docker staging containers run
         dir ('sample-bank-app-service') {
-            sh "python3.6 cleanup.py SampleOnlineBankStaging"
+            sh "python3 cleanup.py SampleOnlineBankStaging"
         }
     }
     
@@ -109,7 +109,7 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-scripts') {
-            sh 'python3.6 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging '+
+            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging '+
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_staging.csv'
             archiveArtifacts artifacts: 'Test_report_staging.csv', fingerprint: true
@@ -119,7 +119,7 @@ node {
     stage('DeployProduction') {
         // first we clean staging
         dir ('sample-bank-app-service') {
-            sh "python3.6 cleanup.py SampleOnlineBankProduction"
+            sh "python3 cleanup.py SampleOnlineBankProduction"
         }
 
         // now we deploy the new container
