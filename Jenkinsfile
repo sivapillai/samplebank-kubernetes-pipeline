@@ -19,13 +19,8 @@ node {
     
     stage('CleanStaging') {
         // The cleanup script makes sure no previous docker staging containers run
-        script{
-                def doc_containers = sh(returnStdout: true, script: "docker container ps -aq | grep SampleOnlineBankStaging").replaceAll("\n", " ") 
-                if (doc_containers) {
-                    sh "docker stop ${doc_containers}"
-                    sh "docker rm ${doc_containers}"
-                }
-          }
+        sh 'docker ps -f name=SampleOnlineBankStaging -q | xargs --no-run-if-empty docker container stop'
+        sh 'docker container ls -a -fname=SampleOnlineBankStaging -q | xargs -r docker container rm'
     }
     
     stage('DeployStaging') {
