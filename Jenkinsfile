@@ -116,10 +116,9 @@ node {
     }
     
     stage('DeployProduction') {
-           // first we clean production        
-           sh 'docker ps -f name=SampleOnlineBankProduction -q | xargs --no-run-if-empty docker container stop'
-           sh 'docker container ls -a -fname=SampleOnlineBankProduction -q | xargs -r docker container rm'
-        }
+         // first we clean production        
+        sh 'docker ps -f name=SampleOnlineBankProduction -q | xargs --no-run-if-empty docker container stop'
+        sh 'docker container ls -a -fname=SampleOnlineBankProduction -q | xargs -r docker container rm'
 
         // now we deploy the new container
         def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
