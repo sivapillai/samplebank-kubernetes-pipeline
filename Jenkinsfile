@@ -25,16 +25,6 @@ node {
     }
     
     stage('DeployStaging') {
-        // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
-        sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance Ken-securityGroup-11, LevelUPSecurityGroup ' +
-             '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-              'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-            
-        // now I push one on the actual service (it has the tags from our rules)
-        sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' + 
-           '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-           'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-
         // Lets deploy the previously build container
         def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
         app.run("--network mynetwork --name SampleOnlineBankStaging -p 3000:3000 " +
@@ -43,7 +33,17 @@ node {
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Staging JOB_NAME=${JOB_NAME} " + 
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}'")
 
-        dir ('dynatrace-scripts') {            
+        dir ('dynatrace-scripts') {
+            // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
+            sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance ACM_Security_Group ' +
+               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
+               'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+            
+            // now I push one on the actual service (it has the tags from our rules)
+            sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' + 
+               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
+               'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+            
             // Create a sample synthetic monitor so as to check the UI functionlity
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3000'
             
@@ -65,7 +65,7 @@ node {
             // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3.6 smoke-test.py 3000 200 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} SampleOnlineBankStaging"
+            sh "python3 smoke-test.py 3000 200 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingloadtest.log', fingerprint: true
         }
 
@@ -117,7 +117,7 @@ node {
     }
     
     stage('DeployProduction') {
-        // first we clean staging
+        // first we clean production
         dir ('sample-bank-app-service') {
             sh "python3 cleanup.py SampleOnlineBankProduction"
         }
@@ -131,17 +131,17 @@ node {
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}'")
 
         dir ('dynatrace-scripts') {
-           // push a deployment event on the host with the tag JenkinsInstance:Ken-securityGroup-11, LevelUPSecurityGroup
-           sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance ANZ_ACM_Security_Group '+
-              '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
-              '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+            // push a deployment event on the host with the tag JenkinsInstance:
+            sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance "Ken-securityGroup-11, LevelUPSecurityGroup"' +
+               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
+               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
             
-           // now I push one on the actual service (it has the tags from our rules)
-           sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
-              '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
-              '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+            // now I push one on the actual service (it has the tags from our rules)
+            sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
+               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
+               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
 
-           // Create a sample synthetic monitor so as to check the UI functionlity
+            // Create a sample synthetic monitor so as to check the UI functionlity
            sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
             
           // Create a sample dashboard for the staging stage
@@ -162,7 +162,7 @@ node {
         dir ('sample-bank-app-service-tests') {
             // start load test and run for 120 seconds - simulating traffic for Production enviornment on port 3010 
             sh "rm -f productionloadtest.log productionloadtestcontrol.txt"
-            sh "python3.6 smoke-test.py 3010 10 ${BUILD_NUMBER} productionloadtest.log ${PUBLIC_IP} SampleOnlineBankProduction "
+            sh "python3 smoke-test.py 3010 10 ${BUILD_NUMBER} productionloadtest.log ${PUBLIC_IP} SampleOnlineBankProduction "
             archiveArtifacts artifacts: 'productionloadtest.log', fingerprint: true
         }
 
@@ -182,7 +182,7 @@ node {
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
         dir ('dynatrace-scripts') {
-            sh 'python3.6 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankProduction '+
+            sh 'python3 make_api_call.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankProduction '+
                         'service.responsetime'
             sh 'mv Test_report.csv Test_report_prod.csv'
             archiveArtifacts artifacts: 'Test_report_prod.csv', fingerprint: true
