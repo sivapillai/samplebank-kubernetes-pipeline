@@ -150,14 +150,16 @@ node {
         sh 'docker ps -f name=SampleOnlineBankProduction -q | xargs --no-run-if-empty docker container stop'
         sh 'docker container ls -a -fname=SampleOnlineBankProduction -q | xargs -r docker container rm'
 
-        // now we deploy the new container
-        def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}", "-f ${env.DOCKERFILE} .")
-        app.run("--network mynetwork --name SampleOnlineBankProduction -p 3010:3000 "+
+        dir ('sample-bank-app-service') {
+            // now we deploy the new container
+           def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}", "-f ${env.DOCKERFILE} .")
+           app.run("--network mynetwork --name SampleOnlineBankProduction -p 3010:3000 "+
                 "-e 'DT_CLUSTER_ID=SampleOnlineBankProduction' "+
                 "-e 'DT_TAGS=Environment=Production Service=Sample-NodeJs-Service' "+
                 "-e 'DT_CUSTOM_PROP=ENVIRONMENT=Production JOB_NAME=${JOB_NAME} "+
                     "BUILD_TAG=${BUILD_TAG} BUILD_NUMBER=${BUIlD_NUMBER}'")
-
+        }
+        
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance:
             sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance "Ken-securityGroup-11, LevelUPSecurityGroup"' +
