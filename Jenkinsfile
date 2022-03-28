@@ -113,7 +113,7 @@ node {
                  DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging'
             } finally {
                  archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
-                 if ('${DYNATRACE_SEC_PROBLEM_COUNT}') {
+                 if (DYNATRACE_SEC_PROBLEM_COUNT) {
                     error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
                     currentBuild.result = 'ABORTED'
                     sh "exit ${DYNATRACE_SEC_PROBLEM_COUNT}" 
