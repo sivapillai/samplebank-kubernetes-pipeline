@@ -108,7 +108,7 @@ node {
     stage('ValidateStaging') {
         dir ('dynatrace-scripts') {      
             try {
-                 '${DYNATRACE_SEC_PROBLEM_COUNT}' = 0
+                 DYNATRACE_SEC_PROBLEM_COUNT = 0
                  // Check if there are vulnerabilities identified by DT    
                  DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging'
             } finally {
