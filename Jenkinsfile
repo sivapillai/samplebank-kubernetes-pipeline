@@ -17,7 +17,7 @@ node {
                 env.DOCKERFILE = Globals.DOCKERFILE
             }
             catch (groovy.lang.MissingPropertyException e ) {
-                env.DOCKERFILE = Dockerfile
+                env.DOCKERFILE = "Dockerfile"
             }
             def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}", "-f $DOCKERFILE")
         }
