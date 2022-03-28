@@ -256,7 +256,6 @@ PAYLOAD=$(cat <<EOF
                 "type": "SINGLE_VALUE",
                 "series": [{
                     "metric": "builtin:service.keyRequest.errors.server.rate",
-                    "aggregation": "AVG",
                     "type": "LINE",
                     "entityType": "SERVICE_KEY_REQUEST",
                     "dimensions": [{
@@ -299,7 +298,6 @@ PAYLOAD=$(cat <<EOF
                 "type": "SINGLE_VALUE",
                 "series": [{
                     "metric": "builtin:service.keyRequest.response.server",
-                    "aggregation": "AVG",
                     "type": "LINE",
                     "entityType": "SERVICE_KEY_REQUEST",
                     "dimensions": [{
@@ -490,7 +488,6 @@ PAYLOAD=$(cat <<EOF
                 "type": "SINGLE_VALUE",
                 "series": [{
                     "metric": "builtin:service.dbconnections.failureRate",
-                    "aggregation": "AVG",
                     "type": "LINE",
                     "entityType": "SERVICE",
                     "dimensions": [{
