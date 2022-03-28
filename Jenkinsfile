@@ -13,7 +13,13 @@ node {
     stage('Build') {
         // Lets build our docker image
         dir ('sample-bank-app-service') {
-            def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}")
+            try {
+                env.DOCKERFILE = Globals.DOCKERFILE
+            }
+            catch (groovy.lang.MissingPropertyException e ) {
+                env.DOCKERFILE = Dockerfile
+            }
+            def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}", "-f $DOCKERFILE")
         }
     }
     
