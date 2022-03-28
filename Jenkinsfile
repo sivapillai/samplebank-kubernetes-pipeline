@@ -106,10 +106,22 @@ node {
     }
     
     stage('ValidateStaging') {
-        // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
-        dir ('dynatrace-scripts') {
+        dir ('dynatrace-scripts') {      
+            
+            // Check if there are vulnerabilities identified by DT    
+            DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'            
+            if (${DYNATRACE_SEC_PROBLEM_COUNT} > 0) {
+               currentBuild.result = 'ABORTED'
+               error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
+            }
+            
+            // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'
             echo "Dynatrace Problems Found: ${DYNATRACE_PROBLEM_COUNT}"
+            if (${DYNATRACE_PROBLEM_COUNT} > 0) {
+               currentBuild.result = 'ABORTED'
+               error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
+            }            
         }
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
