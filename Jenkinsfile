@@ -70,7 +70,7 @@ node {
             // start load test - simulating traffic for Staging enviornment on port 3000 
 
             sh "rm -f stagingloadtest.log stagingloadtestcontrol.txt"
-            sh "python3 smoke-test.py 3000 200 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} SampleOnlineBankStaging"
+            sh "python3 smoke-test.py 3000 10 ${BUILD_NUMBER} stagingloadtest.log ${PUBLIC_IP} SampleOnlineBankStaging"
             archiveArtifacts artifacts: 'stagingloadtest.log', fingerprint: true
         }
 
@@ -109,8 +109,10 @@ node {
         dir ('dynatrace-scripts') {      
             
             // Check if there are vulnerabilities identified by DT    
-            DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'            
-            if (${DYNATRACE_SEC_PROBLEM_COUNT} > 0) {
+            DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging'
+            archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
+            
+            if ('${DYNATRACE_SEC_PROBLEM_COUNT}' > 0) {
                currentBuild.result = 'ABORTED'
                error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
             }
@@ -118,7 +120,7 @@ node {
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'
             echo "Dynatrace Problems Found: ${DYNATRACE_PROBLEM_COUNT}"
-            if (${DYNATRACE_PROBLEM_COUNT} > 0) {
+            if ('${DYNATRACE_PROBLEM_COUNT}' > 0) {
                currentBuild.result = 'ABORTED'
                error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
             }            
