@@ -125,12 +125,14 @@ node {
             echo "About to go in"            
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             try {
+                 DYNATRACE_PROBLEM_COUNT = 0
                  DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'
-            } finally {
-                if ('${DYNATRACE_PROBLEM_COUNT}') {
-                   error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
+            } catch (Exception e) {
+                if (DYNATRACE_PROBLEM_COUNT) {
+                   error("Dynatrace opened some problem. ABORTING the build!!")
                    currentBuild.result = 'ABORTED'
-                }
+                   sh "exit ${DYNATRACE_PROBLEM_COUNT}"                 
+               }
             }
         }
         
@@ -149,7 +151,7 @@ node {
         sh 'docker container ls -a -fname=SampleOnlineBankProduction -q | xargs -r docker container rm'
 
         // now we deploy the new container
-        def app = docker.image("sample-bankapp-service:${BUILD_NUMBER}")
+        def app = docker.build("sample-bankapp-service:${BUILD_NUMBER}", "-f ${env.DOCKERFILE} .")
         app.run("--network mynetwork --name SampleOnlineBankProduction -p 3010:3000 "+
                 "-e 'DT_CLUSTER_ID=SampleOnlineBankProduction' "+
                 "-e 'DT_TAGS=Environment=Production Service=Sample-NodeJs-Service' "+
@@ -201,9 +203,34 @@ node {
     }
     
     stage('ValidateProduction') {
-        dir ('dynatrace-scripts') {
-            DYNATRACE_PROBLEM_COUNT = sh (script: './checkforproblems.sh', returnStatus : true)
-            echo "Dynatrace Problems Found: ${DYNATRACE_PROBLEM_COUNT}"
+        dir ('dynatrace-scripts') {      
+            try {
+                 // Check if there are vulnerabilities identified by DT
+                 DYNATRACE_SEC_PROBLEM_COUNT = 0
+                 DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging'
+            } catch (Exception e) {
+                 if (DYNATRACE_SEC_PROBLEM_COUNT) {
+                    echo "Here I am.. "
+                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
+                    currentBuild.result = 'ABORTED'
+                    sh "exit ${DYNATRACE_SEC_PROBLEM_COUNT}" 
+                 }
+                echo "In here"
+            }
+            archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
+            
+            echo "About to go in"            
+            // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
+            try {
+                 DYNATRACE_PROBLEM_COUNT = 0
+                 DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'
+            } catch (Exception e) {
+                if (DYNATRACE_PROBLEM_COUNT) {
+                   error("Dynatrace opened some problem. ABORTING the build!!")
+                   currentBuild.result = 'ABORTED'
+                   sh "exit ${DYNATRACE_PROBLEM_COUNT}"                 
+               }
+            }
         }
         
         // now lets generate a report using our CLI and lets generate some direct links back to dynatrace
