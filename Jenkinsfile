@@ -111,7 +111,7 @@ node {
                  // Check if there are vulnerabilities identified by DT    
                  DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging'
             } finally {             
-                 if ('${DYNATRACE_SEC_PROBLEM_COUNT}' > 0) {
+                 if ('${DYNATRACE_SEC_PROBLEM_COUNT}') {
                     error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
                     archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
                     currentBuild.result = 'ABORTED'
@@ -122,7 +122,7 @@ node {
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'
             echo "Dynatrace Problems Found: ${DYNATRACE_PROBLEM_COUNT}"
-            if ('${DYNATRACE_PROBLEM_COUNT}' > 0) {
+            if ('${DYNATRACE_PROBLEM_COUNT}') {
                error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
                currentBuild.result = 'ABORTED'
             }            
