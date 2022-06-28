@@ -119,7 +119,6 @@ node {
                  }
             } catch (Exception e) {
                 currentBuild.result = 'ABORTED'
-                return                
             }
             archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
             
