@@ -111,8 +111,9 @@ node {
                  // Check if there are vulnerabilities identified by DT
                  DYNATRACE_SEC_PROBLEM_COUNT = 0
                  DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 7.5'
-            } catch (Exception e) {
+                 echo 'Printing the returned problem count'
                  echo "$DYNATRACE_SEC_PROBLEM_COUNT"
+            } catch (Exception e) {
                  if (DYNATRACE_SEC_PROBLEM_COUNT) {
                     echo "Here I am.. "
                     error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
