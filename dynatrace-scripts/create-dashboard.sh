@@ -228,9 +228,7 @@ PAYLOAD=$(cat <<EOF
         },
         "filtersPerEntityType": {
           "SERVICE": {
-            "AUTO_TAGS": [
-              ["$4:$5"]
-            ]
+            "AUTO_TAGS": ["$4:$5"]
           }
         }
       },
