@@ -229,7 +229,7 @@ PAYLOAD=$(cat <<EOF
         "filtersPerEntityType": {
           "SERVICE": {
             "AUTO_TAGS": [
-              $4
+              ["$4:$5"]
             ]
           }
         }
@@ -292,7 +292,7 @@ PAYLOAD=$(cat <<EOF
                 "nestedFilters": [],
                 "criteria": [
                   {
-                    "value": $4,
+                    "value": ["$4:$5"],
                     "evaluator": "IN"
                   }
                 ]
