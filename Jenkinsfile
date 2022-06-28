@@ -114,12 +114,12 @@ node {
                  echo 'Printing the returned problem count'
                  echo "$DYNATRACE_SEC_PROBLEM_COUNT"
                  if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    currentBuild.result = 'ABORTED'
                     error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
                     return
                  }
-            } catch (Exception e) {                 
-                echo "Received exception while fetching security vulnerabilities"
+            } catch (Exception e) {
+                currentBuild.result = 'ABORTED'
+                return                
             }
             archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
             
@@ -210,23 +210,22 @@ node {
             try {
                  // Check if there are vulnerabilities identified by DT
                  DYNATRACE_SEC_PROBLEM_COUNT = 0
-                 DYNATRACE_SEC_PROBLEM_COUNT = sh 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging'
-            } catch (Exception e) {
+                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Production 8')
+                 echo 'Printing the returned problem count'
+                 echo "$DYNATRACE_SEC_PROBLEM_COUNT"
                  if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    echo "Here I am.. "
-                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
-                    currentBuild.result = 'ABORTED'
-                    sh "exit ${DYNATRACE_SEC_PROBLEM_COUNT}" 
+                    error("Dynatrace identified some vulnerabilities while validating Production Build. ABORTING the build!!")
+                    return
                  }
-                echo "In here"
-            }
-            archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
-            
-            echo "About to go in"            
+            } catch (Exception e) {
+                currentBuild.result = 'ABORTED'
+                return                
+            }          
+
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             try {
                  DYNATRACE_PROBLEM_COUNT = 0
-                 DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankStaging'
+                 DYNATRACE_PROBLEM_COUNT = sh 'python3 checkforproblems.py ${DT_URL} ${DT_TOKEN} DockerService:SampleOnlineBankProduction'
             } catch (Exception e) {
                 if (DYNATRACE_PROBLEM_COUNT) {
                    error("Dynatrace opened some problem. ABORTING the build!!")
