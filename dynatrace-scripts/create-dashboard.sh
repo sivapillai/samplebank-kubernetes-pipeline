@@ -8,11 +8,14 @@ PAYLOAD=$(cat <<EOF
     ],
     "clusterVersion": "1.244.128.20220627-170555"
   },
-  "id": "245b2587-f023-4dd1-8297-bcb89af04c42",
   "dashboardMetadata": {
-    "name": "AppSec Automate Operations",
+    "name": "$1 $2:$3",
     "shared": false,
-    "owner": "nikhil.goenka@dynatrace.com",
+    "owner": "",
+    "sharingDetails": {
+        "linkShared": true,
+        "published": false
+     },
     "popularity": 10
   },
   "tiles": [
