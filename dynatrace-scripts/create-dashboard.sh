@@ -2,652 +2,1017 @@
 
 PAYLOAD=$(cat <<EOF
 {
-    "metadata": {
-        "configurationVersions": [3],
-        "clusterVersion": "1.206.47.20201102-132437"
+  "metadata": {
+    "configurationVersions": [
+      6
+    ],
+    "clusterVersion": "1.244.128.20220627-170555"
+  },
+  "id": "245b2587-f023-4dd1-8297-bcb89af04c42",
+  "dashboardMetadata": {
+    "name": "AppSec Automate Operations",
+    "shared": false,
+    "owner": "nikhil.goenka@dynatrace.com",
+    "popularity": 10
+  },
+  "tiles": [
+    {
+      "name": "Security Vulnerability",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 76,
+        "left": 190,
+        "width": 418,
+        "height": 190
+      },
+      "tileFilter": {},
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "builtin:security.securityProblem.open.global",
+          "spaceAggregation": "MAX",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "Risk Level"
+          ],
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "TOP_LIST",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "valueFormat": "auto",
+            "properties": {
+              "color": "DEFAULT",
+              "seriesType": "STACKED_COLUMN"
+            },
+            "seriesOverrides": [
+              {
+                "name": "MEDIUM",
+                "color": "#ffee7c"
+              },
+              {
+                "name": "HIGH",
+                "color": "#dc172a"
+              },
+              {
+                "name": "LOW",
+                "color": "#ffa86c"
+              }
+            ]
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      }
     },
-    "dashboardMetadata": {
-        "name": "$1 $2:$3",
-        "shared": false,
-        "owner": "",
-        "sharingDetails": {
-            "linkShared": true,
-            "published": false
-        },
-        "dashboardFilter": {
-            "timeframe": ""
-        }
+    {
+      "name": "Host health",
+      "tileType": "HOSTS",
+      "configured": true,
+      "bounds": {
+        "top": 342,
+        "left": 0,
+        "width": 266,
+        "height": 152
+      },
+      "tileFilter": {},
+      "chartVisible": true
     },
-    "tiles": [{
-        "name": "",
-        "tileType": "HOSTS",
-        "configured": true,
-        "bounds": {
-            "top": 38,
-            "left": 228,
-            "width": 228,
-            "height": 152
+    {
+      "name": "Problems",
+      "tileType": "OPEN_PROBLEMS",
+      "configured": true,
+      "bounds": {
+        "top": 76,
+        "left": 0,
+        "width": 152,
+        "height": 152
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Infrastructure Layer",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 304,
+        "left": 0,
+        "width": 266,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Application Host",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 494,
+        "left": 0,
+        "width": 266,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Docker",
+      "tileType": "DOCKER",
+      "configured": true,
+      "bounds": {
+        "top": 342,
+        "left": 304,
+        "width": 304,
+        "height": 152
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Application Container",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 494,
+        "left": 304,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Service Layer",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 570,
+        "left": 0,
+        "width": 266,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Service health",
+      "tileType": "SERVICES",
+      "configured": true,
+      "bounds": {
+        "top": 608,
+        "left": 0,
+        "width": 266,
+        "height": 152
+      },
+      "tileFilter": {},
+      "filterConfig": {
+        "type": "SERVICE",
+        "customName": "Service health",
+        "defaultName": "Service health",
+        "chartConfig": {
+          "legendShown": true,
+          "type": "TIMESERIES",
+          "series": [],
+          "resultMetadata": {}
         },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "HOST",
-            "customName": "Hosts",
-            "defaultName": "Hosts",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "TIMESERIES",
-                "series": [],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "HOST": {
-                    "AUTO_TAGS": ["JenkinsInstance:ANZ_ACM_Security_Group"]
-                }
-            }
-        },
-        "chartVisible": true
-    }, {
-        "name": "Jenkins-host",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 190,
-            "left": 266,
-            "width": 228,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "",
-        "tileType": "SERVICES",
-        "configured": true,
-        "bounds": {
-            "top": 304,
-            "left": 0,
-            "width": 190,
-            "height": 190
-        },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "SERVICE",
-            "customName": "Services",
-            "defaultName": "Services",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "TIMESERIES",
-                "series": [],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "SERVICE": {
-                    "AUTO_TAGS": ["$4:$5"]
-                }
-            }
-        },
-        "chartVisible": true
-    }, {
-        "name": "",
-        "tileType": "DATABASES_OVERVIEW",
-        "configured": true,
-        "bounds": {
-            "top": 646,
-            "left": 0,
-            "width": 228,
-            "height": 152
-        },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "DATABASE",
-            "customName": "Databases",
-            "defaultName": "Databases",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "TIMESERIES",
-                "series": [],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "DATABASE": {
-                    "NAME": ["test"]
-                }
-            }
-        },
-        "chartVisible": true
-    }, {
-        "name": "Service",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 266,
-            "left": 0,
-            "width": 190,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Problems",
-        "tileType": "OPEN_PROBLEMS",
-        "configured": true,
-        "bounds": {
-            "top": 38,
-            "left": 0,
-            "width": 152,
-            "height": 152
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Docker",
-        "tileType": "DOCKER",
-        "configured": true,
-        "bounds": {
-            "top": 38,
-            "left": 532,
-            "width": 304,
-            "height": 152
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Docker-details",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 190,
-            "left": 570,
-            "width": 228,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Database health",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 608,
-            "left": 0,
-            "width": 228,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Problems",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 190,
-            "left": 0,
-            "width": 152,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Application health",
-        "tileType": "APPLICATIONS",
-        "configured": true,
-        "bounds": {
-            "top": 874,
-            "left": 0,
-            "width": 152,
-            "height": 152
-        },
-        "tileFilter": {},
-        "chartVisible": true
-    }, {
-        "name": "My web application",
-        "tileType": "APPLICATION",
-        "configured": true,
-        "bounds": {
-            "top": 874,
-            "left": 190,
-            "width": 304,
-            "height": 304
-        },
-        "tileFilter": {},
-        "assignedEntities": ["APPLICATION-EA7C4B59F27D43EB"]
-    }, {
-        "name": "Response Time",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 266,
-            "left": 228,
-            "width": 228,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Failed Requests",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 266,
-            "left": 494,
-            "width": 228,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Request Count",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 266,
-            "left": 722,
-            "width": 304,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Custom chart",
-        "tileType": "CUSTOM_CHARTING",
-        "configured": true,
-        "bounds": {
-            "top": 304,
-            "left": 494,
-            "width": 228,
-            "height": 190
-        },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "MIXED",
-            "customName": "Failure rate (server side  errors)",
-            "defaultName": "Custom chart",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "SINGLE_VALUE",
-                "series": [{
-                    "metric": "builtin:service.keyRequest.errors.server.rate",
-                    "type": "LINE",
-                    "entityType": "SERVICE_KEY_REQUEST",
-                    "dimensions": [{
-                        "id": "0",
-                        "name": "dt.entity.service_method",
-                        "values": [],
-                        "entityDimension": true
-                    }],
-                    "sortAscending": false,
-                    "sortColumn": true,
-                    "aggregationRate": "TOTAL"
-                }],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["$4:$5"]
-                }
-            }
+        "filtersPerEntityType": {
+          "SERVICE": {
+            "AUTO_TAGS": [
+              "[Environment]Environment:Staging"
+            ]
+          }
         }
-    }, {
-        "name": "",
-        "tileType": "CUSTOM_CHARTING",
-        "configured": true,
-        "bounds": {
-            "top": 304,
-            "left": 228,
-            "width": 228,
-            "height": 190
-        },
-        "tileFilter": {
-            "timeframe": "-30m"
-        },
-        "filterConfig": {
-            "type": "MIXED",
-            "customName": "Server side response time",
-            "defaultName": "Custom chart",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "SINGLE_VALUE",
-                "series": [{
-                    "metric": "builtin:service.keyRequest.response.server",
-                    "type": "LINE",
-                    "entityType": "SERVICE_KEY_REQUEST",
-                    "dimensions": [{
-                        "id": "0",
-                        "name": "dt.entity.service_method",
-                        "values": [],
-                        "entityDimension": true
-                    }],
-                    "sortAscending": false,
-                    "sortColumn": true,
-                    "aggregationRate": "TOTAL"
-                }],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["$4:$5"]
-                }
-            }
+      },
+      "chartVisible": true
+    },
+    {
+      "name": "Service health",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 760,
+        "left": 0,
+        "width": 266,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Response time",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 760,
+        "left": 304,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Service response time",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 608,
+        "left": 304,
+        "width": 304,
+        "height": 152
+      },
+      "tileFilter": {},
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "builtin:service.response.time",
+          "spaceAggregation": "AVG",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "dt.entity.service"
+          ],
+          "sortBy": "DESC",
+          "filterBy": {
+            "filterOperator": "AND",
+            "nestedFilters": [
+              {
+                "filter": "dt.entity.service",
+                "filterType": "TAG",
+                "filterOperator": "OR",
+                "nestedFilters": [],
+                "criteria": [
+                  {
+                    "value": "[Environment]Environment:Staging",
+                    "evaluator": "IN"
+                  }
+                ]
+              }
+            ],
+            "criteria": []
+          },
+          "limit": 100,
+          "enabled": true
         }
-    }, {
-        "name": "",
-        "tileType": "CUSTOM_CHARTING",
-        "configured": true,
-        "bounds": {
-            "top": 304,
-            "left": 722,
-            "width": 304,
-            "height": 190
+      ],
+      "visualConfig": {
+        "type": "SINGLE_VALUE",
+        "global": {
+          "hideLegend": false
         },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "MIXED",
-            "customName": "Request count",
-            "defaultName": "Custom chart",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "TOP_LIST",
-                "series": [{
-                    "metric": "builtin:service.keyRequest.count.total",
-                    "aggregation": "NONE",
-                    "type": "LINE",
-                    "entityType": "SERVICE_KEY_REQUEST",
-                    "dimensions": [{
-                        "id": "0",
-                        "name": "dt.entity.service_method",
-                        "values": [],
-                        "entityDimension": true
-                    }],
-                    "sortAscending": false,
-                    "sortColumn": true,
-                    "aggregationRate": "TOTAL"
-                }],
-                "resultMetadata": {
-                    "SERVICE_METHOD-6470404B2DBAEC09¦SERVICE_METHOD»SERVICE_METHOD-6470404B2DBAEC09»truebuiltin:service.keyRequest.count.total|NONE|TOTAL|LINE|SERVICE_KEY_REQUEST": {
-                        "lastModified": 1602131534710,
-                        "customColor": "#f5d30f"
-                    }
-                }
+        "rules": [
+          {
+            "matcher": "A:",
+            "valueFormat": "auto",
+            "properties": {
+              "color": "TURQUOISE",
+              "seriesType": "LINE"
             },
-            "filtersPerEntityType": {
-                "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["$4:$5"]
-                }
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
             }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": false,
+          "linkTileColorToThreshold": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "value": 600,
+                "color": "#7dc540"
+              },
+              {
+                "value": 6000,
+                "color": "#f5d30f"
+              },
+              {
+                "value": 60000,
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false
+        },
+        "graphChartSettings": {
+          "connectNulls": true
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
         }
-    }, {
-        "name": "Requests to Database",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 608,
-            "left": 266,
-            "width": 608,
-            "height": 38
+      },
+      "queriesSettings": {
+        "resolution": ""
+      }
+    },
+    {
+      "name": "Failed requests",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 608,
+        "left": 646,
+        "width": 304,
+        "height": 152
+      },
+      "tileFilter": {},
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "builtin:service.errors.total.rate",
+          "spaceAggregation": "AVG",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "dt.entity.service"
+          ],
+          "sortBy": "DESC",
+          "filterBy": {
+            "filterOperator": "AND",
+            "nestedFilters": [
+              {
+                "filter": "dt.entity.service",
+                "filterType": "TAG",
+                "filterOperator": "OR",
+                "nestedFilters": [],
+                "criteria": [
+                  {
+                    "value": "[Environment]Environment:Staging",
+                    "evaluator": "IN"
+                  }
+                ]
+              }
+            ],
+            "criteria": []
+          },
+          "limit": 100,
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "SINGLE_VALUE",
+        "global": {
+          "hideLegend": false
         },
-        "tileFilter": {}
-    }, {
-        "name": "Database connection",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 608,
-            "left": 912,
-            "width": 532,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Custom chart",
-        "tileType": "CUSTOM_CHARTING",
-        "configured": true,
-        "bounds": {
-            "top": 646,
-            "left": 266,
-            "width": 304,
-            "height": 152
-        },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "MIXED",
-            "customName": "Number of calls to databases",
-            "defaultName": "Custom chart",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "TOP_LIST",
-                "series": [{
-                    "metric": "builtin:service.keyRequest.dbChildCallCount",
-                    "aggregation": "NONE",
-                    "type": "LINE",
-                    "entityType": "SERVICE_KEY_REQUEST",
-                    "dimensions": [{
-                        "id": "0",
-                        "name": "dt.entity.service_method",
-                        "values": [],
-                        "entityDimension": true
-                    }],
-                    "sortAscending": false,
-                    "sortColumn": true,
-                    "aggregationRate": "TOTAL"
-                }],
-                "resultMetadata": {}
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
             },
-            "filtersPerEntityType": {
-                "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["$4:$5"]
-                }
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": false,
+          "linkTileColorToThreshold": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "value": 3,
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": "1m"
+      }
+    },
+    {
+      "name": "Failed requests",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 760,
+        "left": 646,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Database",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 836,
+        "left": 0,
+        "width": 266,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Database host health",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1026,
+        "left": 0,
+        "width": 266,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "DB response time",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1026,
+        "left": 304,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "DB Failed requests",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1026,
+        "left": 646,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Database health",
+      "tileType": "DATABASES_OVERVIEW",
+      "configured": true,
+      "bounds": {
+        "top": 874,
+        "left": 0,
+        "width": 266,
+        "height": 152
+      },
+      "tileFilter": {},
+      "filterConfig": {
+        "type": "DATABASE",
+        "customName": "Database health",
+        "defaultName": "Database health",
+        "chartConfig": {
+          "legendShown": true,
+          "type": "TIMESERIES",
+          "series": [],
+          "resultMetadata": {}
+        },
+        "filtersPerEntityType": {
+          "DATABASE": {
+            "NAME": [
+              "test"
+            ]
+          }
+        }
+      },
+      "chartVisible": true
+    },
+    {
+      "name": "Database response time",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 874,
+        "left": 304,
+        "width": 304,
+        "height": 152
+      },
+      "tileFilter": {},
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "builtin:service.response.time",
+          "spaceAggregation": "AVG",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "dt.entity.service"
+          ],
+          "sortBy": "DESC",
+          "filterBy": {
+            "filterOperator": "AND",
+            "nestedFilters": [
+              {
+                "filter": "dt.entity.service",
+                "filterType": "NAME",
+                "filterOperator": "OR",
+                "entityAttribute": "entityName",
+                "nestedFilters": [],
+                "criteria": [
+                  {
+                    "value": "test",
+                    "evaluator": "IN",
+                    "matchExactly": false
+                  }
+                ]
+              }
+            ],
+            "criteria": []
+          },
+          "limit": 100,
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "SINGLE_VALUE",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "valueFormat": "auto",
+            "properties": {
+              "color": "TURQUOISE",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
             }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": false,
+          "linkTileColorToThreshold": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "value": 600,
+                "color": "#7dc540"
+              },
+              {
+                "value": 6000,
+                "color": "#f5d30f"
+              },
+              {
+                "value": 60000,
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false
+        },
+        "graphChartSettings": {
+          "connectNulls": true
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
         }
-    }, {
-        "name": "Custom chart",
-        "tileType": "CUSTOM_CHARTING",
-        "configured": true,
-        "bounds": {
-            "top": 646,
-            "left": 570,
-            "width": 304,
-            "height": 152
-        },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "MIXED",
-            "customName": "Time spent in database calls",
-            "defaultName": "Custom chart",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "SINGLE_VALUE",
-                "series": [{
-                    "metric": "builtin:service.keyRequest.dbChildCallTime",
-                    "aggregation": "NONE",
-                    "type": "LINE",
-                    "entityType": "SERVICE_KEY_REQUEST",
-                    "dimensions": [{
-                        "id": "0",
-                        "name": "dt.entity.service_method",
-                        "values": [],
-                        "entityDimension": true
-                    }],
-                    "sortAscending": false,
-                    "sortColumn": true,
-                    "aggregationRate": "TOTAL"
-                }],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "SERVICE_KEY_REQUEST": {
-                    "AUTO_TAGS": ["$4:$5"]
-                }
-            }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      }
+    },
+    {
+      "name": "Failed requests",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 874,
+        "left": 646,
+        "width": 304,
+        "height": 152
+      },
+      "tileFilter": {},
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "builtin:service.errors.total.rate",
+          "spaceAggregation": "AVG",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "dt.entity.service"
+          ],
+          "sortBy": "DESC",
+          "filterBy": {
+            "filterOperator": "AND",
+            "nestedFilters": [
+              {
+                "filter": "dt.entity.service",
+                "filterType": "NAME",
+                "filterOperator": "OR",
+                "entityAttribute": "entityName",
+                "nestedFilters": [],
+                "criteria": [
+                  {
+                    "value": "test",
+                    "evaluator": "IN",
+                    "matchExactly": false
+                  }
+                ]
+              }
+            ],
+            "criteria": []
+          },
+          "limit": 100,
+          "enabled": true
         }
-    }, {
-        "name": "Custom chart",
-        "tileType": "CUSTOM_CHARTING",
-        "configured": true,
-        "bounds": {
-            "top": 646,
-            "left": 1178,
-            "width": 266,
-            "height": 152
+      ],
+      "visualConfig": {
+        "type": "SINGLE_VALUE",
+        "global": {
+          "hideLegend": false
         },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "MIXED",
-            "customName": "Connection failure rate",
-            "defaultName": "Custom chart",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "SINGLE_VALUE",
-                "series": [{
-                    "metric": "builtin:service.dbconnections.failureRate",
-                    "type": "LINE",
-                    "entityType": "SERVICE",
-                    "dimensions": [{
-                        "id": "0",
-                        "name": "dt.entity.service",
-                        "values": [],
-                        "entityDimension": true
-                    }],
-                    "sortAscending": false,
-                    "sortColumn": true,
-                    "aggregationRate": "TOTAL"
-                }],
-                "resultMetadata": {}
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
             },
-            "filtersPerEntityType": {}
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": false,
+          "linkTileColorToThreshold": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "value": 3,
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
         }
-    }, {
-        "name": "Custom chart",
-        "tileType": "CUSTOM_CHARTING",
-        "configured": true,
-        "bounds": {
-            "top": 646,
-            "left": 912,
-            "width": 266,
-            "height": 152
+      },
+      "queriesSettings": {
+        "resolution": "1m"
+      }
+    },
+    {
+      "name": "Database performance",
+      "tileType": "DATABASE",
+      "configured": true,
+      "bounds": {
+        "top": 874,
+        "left": 988,
+        "width": 304,
+        "height": 152
+      },
+      "tileFilter": {},
+      "assignedEntities": [
+        "SERVICE-49AEE084C05915AB"
+      ]
+    },
+    {
+      "name": "DB health parameters",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1026,
+        "left": 988,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Application",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1102,
+        "left": 0,
+        "width": 266,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Web application",
+      "nameSize": "large",
+      "tileType": "APPLICATION",
+      "configured": true,
+      "bounds": {
+        "top": 1140,
+        "left": 304,
+        "width": 304,
+        "height": 304
+      },
+      "tileFilter": {},
+      "assignedEntities": [
+        "APPLICATION-EA7C4B59F27D43EB"
+      ]
+    },
+    {
+      "name": "",
+      "tileType": "APPLICATIONS",
+      "configured": true,
+      "bounds": {
+        "top": 1140,
+        "left": 0,
+        "width": 266,
+        "height": 190
+      },
+      "tileFilter": {},
+      "filterConfig": {
+        "type": "APPLICATION",
+        "customName": "",
+        "defaultName": "Monitored Web  applications",
+        "chartConfig": {
+          "legendShown": true,
+          "type": "TIMESERIES",
+          "series": [],
+          "resultMetadata": {}
         },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "MIXED",
-            "customName": "Successful connections",
-            "defaultName": "Custom chart",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "TOP_LIST",
-                "series": [{
-                    "metric": "builtin:service.dbconnections.success",
-                    "aggregation": "NONE",
-                    "type": "LINE",
-                    "entityType": "SERVICE",
-                    "dimensions": [{
-                        "id": "0",
-                        "name": "dt.entity.service",
-                        "values": [],
-                        "entityDimension": true
-                    }],
-                    "sortAscending": false,
-                    "sortColumn": true,
-                    "aggregationRate": "TOTAL"
-                }],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "SERVICE": {
-                    "SPECIFIC_ENTITIES": ["SERVICE-49AEE084C05915AB"]
-                }
-            }
+        "filtersPerEntityType": {
+          "APPLICATION": {
+            "APPLICATION_TYPE": [
+              "0"
+            ],
+            "APPLICATION_STATUS": [
+              "0"
+            ]
+          }
         }
-    }, {
-        "name": "Infrastructure View",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 0,
-            "left": 228,
-            "width": 570,
-            "height": 38
+      },
+      "chartVisible": true
+    },
+    {
+      "name": "Application health",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1330,
+        "left": 0,
+        "width": 266,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": " Application parameters",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1444,
+        "left": 304,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "",
+      "tileType": "SYNTHETIC_TESTS",
+      "configured": true,
+      "bounds": {
+        "top": 1140,
+        "left": 988,
+        "width": 304,
+        "height": 304
+      },
+      "tileFilter": {},
+      "filterConfig": {
+        "type": "WEB_CHECK",
+        "customName": "",
+        "defaultName": "Tagged synthetic monitor",
+        "chartConfig": {
+          "legendShown": true,
+          "type": "TIMESERIES",
+          "series": [],
+          "resultMetadata": {}
         },
-        "tileFilter": {}
-    }, {
-        "name": "Application-health",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 836,
-            "left": 0,
-            "width": 304,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "",
-        "tileType": "SYNTHETIC_TESTS",
-        "configured": true,
-        "bounds": {
-            "top": 874,
-            "left": 570,
-            "width": 304,
-            "height": 304
-        },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "WEB_CHECK",
-            "customName": "",
-            "defaultName": "Tagged synthetic monitor",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "TIMESERIES",
-                "series": [],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "WEB_CHECK": {
-                    "AUTO_TAGS": ["$1"]
-                }
-            }
-        },
-        "chartVisible": true
-    }, {
-        "name": "Synthetic-browser",
-        "tileType": "HEADER",
-        "configured": true,
-        "bounds": {
-            "top": 836,
-            "left": 570,
-            "width": 304,
-            "height": 38
-        },
-        "tileFilter": {}
-    }, {
-        "name": "Custom chart",
-        "tileType": "CUSTOM_CHARTING",
-        "configured": true,
-        "bounds": {
-            "top": 874,
-            "left": 874,
-            "width": 304,
-            "height": 304
-        },
-        "tileFilter": {},
-        "filterConfig": {
-            "type": "MIXED",
-            "customName": "Successful executions",
-            "defaultName": "Custom chart",
-            "chartConfig": {
-                "legendShown": true,
-                "type": "TIMESERIES",
-                "series": [{
-                    "metric": "builtin:synthetic.browser.success",
-                    "aggregation": "NONE",
-                    "type": "LINE",
-                    "entityType": "SYNTHETIC_BROWSER_MONITOR",
-                    "dimensions": [{
-                        "id": "0",
-                        "name": "dt.entity.synthetic_test",
-                        "values": [],
-                        "entityDimension": true
-                    }],
-                    "sortAscending": false,
-                    "sortColumn": true,
-                    "aggregationRate": "TOTAL"
-                }],
-                "resultMetadata": {}
-            },
-            "filtersPerEntityType": {
-                "SYNTHETIC_BROWSER_MONITOR": {
-                    "AUTO_TAGS": ["$1"]
-                }
-            }
+        "filtersPerEntityType": {
+          "WEB_CHECK": {
+            "AUTO_TAGS": [
+              "Staging"
+            ]
+          }
         }
-    }]
+      },
+      "chartVisible": true
+    },
+    {
+      "name": "Synthetic monitors",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1444,
+        "left": 988,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "World map",
+      "tileType": "APPLICATION_WORLDMAP",
+      "configured": true,
+      "bounds": {
+        "top": 1140,
+        "left": 646,
+        "width": 304,
+        "height": 304
+      },
+      "tileFilter": {},
+      "assignedEntities": [
+        "APPLICATION-EA7C4B59F27D43EB",
+        "GEOLOCATION-0000000000000000",
+        "WORLD"
+      ],
+      "metric": "APDEX"
+    },
+    {
+      "name": "Apdex rating for users",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1444,
+        "left": 646,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {}
+    },
+    {
+      "name": "Environment Layer",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 38,
+        "left": 0,
+        "width": 342,
+        "height": 38
+      },
+      "tileFilter": {}
+    }
+  ]
 }
 EOF
 )
