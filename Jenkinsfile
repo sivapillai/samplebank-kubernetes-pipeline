@@ -13,9 +13,9 @@ node {
     stage('Build') {
         // Lets build our docker image
         dir ('sample-bank-app-service') {
-            sh 'printenv'
+            echo ${env.DOCKERFILE}
             try {
-                env.DOCKERFILE = Globals.DOCKERFILE
+                env.DOCKERFILE = ${env.DOCKERFILE}
             }
             catch (groovy.lang.MissingPropertyException e ) {
                 env.DOCKERFILE = "Dockerfile"
