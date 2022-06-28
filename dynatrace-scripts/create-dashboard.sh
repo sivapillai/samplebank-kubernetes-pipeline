@@ -290,7 +290,7 @@ PAYLOAD=$(cat <<EOF
                 "nestedFilters": [],
                 "criteria": [
                   {
-                    "value": ["$4:$5"],
+                    "value": "$4:$5",
                     "evaluator": "IN"
                   }
                 ]
