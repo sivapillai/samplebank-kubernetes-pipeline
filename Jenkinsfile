@@ -120,6 +120,8 @@ node {
                  }
             } catch (e) {
                 if (DYNATRACE_SEC_PROBLEM_COUNT) {
+                    sh 'mv securityVulnerabilityReport.txt securityVulnerabilityReportStaging.txt'
+                    archiveArtifacts artifacts: 'securityVulnerabilityReportStaging.txt', fingerprint: true
                     currentBuild.result = 'ABORTED'
                 }
                 throw(e)
@@ -213,17 +215,21 @@ node {
             try {
                  // Check if there are vulnerabilities identified by DT
                  DYNATRACE_SEC_PROBLEM_COUNT = 0
-                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Production 8')
+                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 7.5')
                  echo 'Printing the returned problem count'
                  echo "$DYNATRACE_SEC_PROBLEM_COUNT"
+                
                  if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    error("Dynatrace identified some vulnerabilities while validating Production Build. ABORTING the build!!")
-                    return
+                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
                  }
-            } catch (Exception e) {
-                currentBuild.result = 'ABORTED'
-                return                
-            }          
+            } catch (e) {
+                if (DYNATRACE_SEC_PROBLEM_COUNT) {
+                    sh 'mv securityVulnerabilityReport.txt securityVulnerabilityReportProd.txt'
+                    archiveArtifacts artifacts: 'securityVulnerabilityReportProd.txt', fingerprint: true
+                    currentBuild.result = 'ABORTED'
+                }
+                throw(e)
+            }
 
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             try {
