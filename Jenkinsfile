@@ -117,8 +117,11 @@ node {
                  if (DYNATRACE_SEC_PROBLEM_COUNT) {
                     error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
                  }
-            } catch (Exception e) {
-                currentBuild.result = 'ABORTED'
+            } catch (e) {
+                if (DYNATRACE_SEC_PROBLEM_COUNT) {
+                    currentBuild.result = 'ABORTED'
+                }
+                throw(e)
             }
             archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
             
