@@ -10,11 +10,11 @@ PAYLOAD=$(cat <<EOF
   },
   "dashboardMetadata": {
     "name": "$1 $2:$3",
-    "shared": false,
+    "shared": true,
     "owner": "",
     "sharingDetails": {
         "linkShared": true,
-        "published": false
+        "published": true
      },
     "popularity": 10
   },
@@ -229,7 +229,7 @@ PAYLOAD=$(cat <<EOF
         "filtersPerEntityType": {
           "SERVICE": {
             "AUTO_TAGS": [
-              "[Environment]Environment:Staging"
+              $4
             ]
           }
         }
@@ -292,7 +292,7 @@ PAYLOAD=$(cat <<EOF
                 "nestedFilters": [],
                 "criteria": [
                   {
-                    "value": "[Environment]Environment:Staging",
+                    "value": $4,
                     "evaluator": "IN"
                   }
                 ]
@@ -416,7 +416,7 @@ PAYLOAD=$(cat <<EOF
                 "nestedFilters": [],
                 "criteria": [
                   {
-                    "value": "[Environment]Environment:Staging",
+                    "value": "$4",
                     "evaluator": "IN"
                   }
                 ]
