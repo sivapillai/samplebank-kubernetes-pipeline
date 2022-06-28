@@ -13,6 +13,7 @@ node {
     stage('Build') {
         // Lets build our docker image
         dir ('sample-bank-app-service') {
+            sh 'printenv'
             try {
                 env.DOCKERFILE = Globals.DOCKERFILE
             }
