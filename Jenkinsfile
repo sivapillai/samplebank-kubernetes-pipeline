@@ -114,10 +114,9 @@ node {
                  echo 'Printing the returned problem count'
                  echo "$DYNATRACE_SEC_PROBLEM_COUNT"
                  if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    echo "Here I am.. "
-                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
                     currentBuild.result = 'ABORTED'
-                    sh "exit ${DYNATRACE_SEC_PROBLEM_COUNT}" 
+                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
+                    return
                  }
             } catch (Exception e) {                 
                 echo "Received exception while fetching security vulnerabilities"
