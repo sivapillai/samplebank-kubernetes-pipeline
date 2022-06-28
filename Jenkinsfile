@@ -113,14 +113,14 @@ node {
                  def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 7.5')
                  echo 'Printing the returned problem count'
                  echo "$DYNATRACE_SEC_PROBLEM_COUNT"
-            } catch (Exception e) {
                  if (DYNATRACE_SEC_PROBLEM_COUNT) {
                     echo "Here I am.. "
                     error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
                     currentBuild.result = 'ABORTED'
                     sh "exit ${DYNATRACE_SEC_PROBLEM_COUNT}" 
                  }
-                echo "In here"
+            } catch (Exception e) {                 
+                echo "Received exception while fetching security vulnerabilities"
             }
             archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
             
