@@ -19,34 +19,22 @@
 # ./dynatrace-scripts/pushtag.sh HOST AWS Environment JenkinsTutorial ${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}
 
 PAYLOAD=$(cat <<EOF
-{
-  "eventType": "CUSTOM_DEPLOYMENT",
-  "attachRules" : {
-    "tagRule" : [
-      {
-        "meTypes" : ["$1"],
-        "tags" : [
-          {
-            "context" : "$2",
-            "key" : "$3",
-            "value" : "$4"
-          }]
-      }]
-  },
-  "deploymentName" : "$5",
-  "deploymentVersion" : "$6",
-  "deploymentProject" : "$7",
-  "source" : "$8",
-  "ciBackLink" : "$9",
-  "customProperties" : {
-    "JenkinsUrl" : "$10",
-    "BuildUrl" : "$11",
-    "GitCommit" : "$12"
-  }
+{  "eventType": "CUSTOM_DEPLOYMENT",
+   "title":"Deployment",
+  "entitySelector":
+     "type($1), tag($2)",
+  "properties": {
+    "dt.event.deployment.release_stage":"$6",
+    "dt.event.deployment.release_product":"$10",
+    "dt.event.deployment.name":"$7",
+    "dt.event.deployment.project": "$5",
+    "dt.event.deployment.remediation_action_link": "my-ansible-playbook",
+    "dt.event.deployment.version": "$4",
+    "dt.event.is_rootcause_relevant" : true
+   }
 }
 EOF
 )
 
 echo $PAYLOAD
-echo ${DT_URL}/api/v1/events
-curl -H "Content-Type: application/json" -H "Authorization: Api-Token ${DT_TOKEN}" -X POST -d "${PAYLOAD}" ${DT_URL}/api/v1/events
+curl -H "Content-Type: application/json" -H "Authorization: Api-Token ${DT_TOKEN}" -X POST -d "${PAYLOAD}" ${DT_URL}/api/v2/events/ingest/
