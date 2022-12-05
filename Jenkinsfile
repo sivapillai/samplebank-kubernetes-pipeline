@@ -3,8 +3,9 @@ node {
         APP_NAME = "SampleNodeJs"
         STAGING = "Staging"
         PRODUCTION = "Production"
-    }
- 
+        execution_id = 0
+    } 
+    
     stage('Checkout') {
         // Checkout our application source code
         git url: 'https://github.com/nikhilgoenkatech/JenkinsBankApp.git'
@@ -16,7 +17,8 @@ node {
             try {
                 env.DOCKERFILE = env.DOCKERFILE
             }
-            catch (groovy.lang.MissingPropertyException e ) {
+            catch (e) {
+            //catch (groovy.lang.MissingPropertyException e ) {
                 echo "Received an exception!!!"
                 env.DOCKERFILE = "Dockerfile"
             }
@@ -41,29 +43,32 @@ node {
 
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
-            sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance LevelUPSecurityGroup ' +
+            sh './pushdeployment.sh HOST JenkinsInstance ' +
                '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-               'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-            
-            // now I push one on the actual service (it has the tags from our rules)
-            sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' + 
-               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-               'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-            
-            // Create a sample synthetic monitor so as to check the UI functionlity
+               'Staging SampleOnlineBankStaging'
+                        
+            // Create a on-demand synthetic monitor so as to check the UI functionlity
             sh './synthetic-monitor.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3000'
             
-            // Create a sample dashboard for the staging stage
-            sh './create-dashboard.sh Staging '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' DockerService SampleOnlineBankStaging'
+            // Create SLOs for the staging environment
+            sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankStaging DockerService staging"
+            
+            // Pull the SLOs id and create a sample dashboard for the staging stage
+            sh "python3 populate_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankStaging ${JOB_NAME} staging ${BUILD_NUMBER} DockerService"
         }
     }
     
     stage('Testing') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' +
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging ' +
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test as part of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+        }
+        dir('dynatrace-scripts') {
+            // Trigger the on-demand synthetic monitor as part of the Testing cycle
+            env.execution_id = sh(script: 'python3 trigger_syn_monitor.py ${DT_URL} ${DT_TOKEN} Staging ${BUILD_NUMBER}', returnStatus: true)
+
         }
         
         // lets run some test scripts
@@ -77,14 +82,14 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
 
         // lets push an event to dynatrace that indicates that we START a sanity test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging ' +
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging ' +
                '"STARTING Sanity-Test" ${JOB_NAME} "Starting Sanity-test of the Testing stage"' + 
                ' ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -100,35 +105,28 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankStaging '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankStaging '+
                '"STOPPING Sanity Test" ${JOB_NAME} "Stopping Sanity-test of the Testing stage" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
     }
     
     stage('ValidateStaging') {
-        dir ('dynatrace-scripts') {      
+        dir ('dynatrace-scripts') {              
+            // Validate if synthetic monitor ran into any issues 
+            echo "Checking Sythetic monitor status"
             try {
-                 // Check if there are vulnerabilities identified by DT
-                 DYNATRACE_SEC_PROBLEM_COUNT = 0
-                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 7.5')
-                 echo 'Printing the returned problem count'
-                 echo "$DYNATRACE_SEC_PROBLEM_COUNT"
-                
-                 if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
-                 }
-            } catch (e) {
-                if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    sh 'mv securityVulnerabilityReport.txt securityVulnerabilityReportStaging.txt'
-                    archiveArtifacts artifacts: 'securityVulnerabilityReportStaging.txt', fingerprint: true
+              STATUS = 0
+                STATUS = sh 'python3 check_synthetic_run.py ${DT_URL} ${DT_TOKEN} env.execution_id'
+            } catch (Exception e) {
+                if (STATUS) {
+                    error("Synthetic monitor has failed. Aborting the build!!")
                     currentBuild.result = 'ABORTED'
+                    sh "exit ${STATUS}"
                 }
-                throw(e)
             }
-            archiveArtifacts artifacts: 'securityVulnerabilityReport.txt', fingerprint: true
             
-            echo "About to go in"            
+            echo "Will look for any open problems"            
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             try {
                  DYNATRACE_PROBLEM_COUNT = 0
@@ -168,28 +166,25 @@ node {
         
         dir ('dynatrace-scripts') {
             // push a deployment event on the host with the tag JenkinsInstance:
-            sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance "Ken-securityGroup-11, LevelUPSecurityGroup"' +
-               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
-               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-            
-            // now I push one on the actual service (it has the tags from our rules)
-            sh './pushdeployment.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
-               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} Jenkins '+
-               '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+            sh './pushdeployment.sh HOST JenkinsInstance ' +
+               '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' +
+                'Production SampleOnlineBankProduction'
 
             // Create a sample synthetic monitor so as to check the UI functionlity
            sh './synthetic-monitor.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' 3010'
             
+            // Create SLOs for the staging environment
+            sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankProduction DockerService prod"
+                        
           // Create a sample dashboard for the staging stage
-          sh './create-dashboard.sh Production '+  '${JOB_NAME} ${BUILD_NUMBER}' + ' DockerService SampleOnlineBankProduction'    
-            
+            sh "python3 populate_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankProduction ${JOB_NAME} prod ${BUILD_NUMBER} DockerService"            
         }        
     }    
     
     stage('WarmUpProduction') {
         // lets push an event to dynatrace that indicates that we START a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankProduction '+
                '"STARTING Load Test" ${JOB_NAME} "Starting a Load Test to warm up new prod deployment" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -204,7 +199,7 @@ node {
 
         // lets push an event to dynatrace that indicates that we STOP a load test
         dir ('dynatrace-scripts') {
-            sh './pushevent.sh SERVICE CONTEXTLESS DockerService SampleOnlineBankProduction '+
+            sh './pushevent.sh SERVICE DockerService SampleOnlineBankProduction '+
                '"STOPPING Load Test" ${JOB_NAME} "Stopping a Load Test as part of the Production warm up phase" '+
                '${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
         }
@@ -212,24 +207,6 @@ node {
     
     stage('ValidateProduction') {
         dir ('dynatrace-scripts') {      
-            try {
-                 // Check if there are vulnerabilities identified by DT
-                 DYNATRACE_SEC_PROBLEM_COUNT = 0
-                 def DYNATRACE_SEC_PROBLEM_COUNT = sh(returnStatus: true, script: 'python3 checkforvulnerability.py ${DT_URL} ${DT_TOKEN} [Environment]Environment:Staging 7.5')
-                 echo 'Printing the returned problem count'
-                 echo "$DYNATRACE_SEC_PROBLEM_COUNT"
-                
-                 if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    error("Dynatrace identified some vulnerabilities. ABORTING the build!!")
-                 }
-            } catch (e) {
-                if (DYNATRACE_SEC_PROBLEM_COUNT) {
-                    sh 'mv securityVulnerabilityReport.txt securityVulnerabilityReportProd.txt'
-                    archiveArtifacts artifacts: 'securityVulnerabilityReportProd.txt', fingerprint: true
-                    currentBuild.result = 'ABORTED'
-                }
-                throw(e)
-            }
 
             // lets see if Dynatrace AI found problems -> if so - we can stop the pipeline!
             try {
