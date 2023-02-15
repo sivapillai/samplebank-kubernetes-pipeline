@@ -5,7 +5,7 @@ node {
          dir ('deployment-files')
 	    {
 		    kubeconfig(credentialsId: 'kube-config', serverUrl: '') {
-				 sh 'kubectl apply -f sample.yaml'
+				 sh 'kubectl get all --all-namespaces'
 			 }		   
 		   echo 'build completed'
          }
