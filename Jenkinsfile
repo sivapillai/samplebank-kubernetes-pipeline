@@ -1,11 +1,15 @@
 node {
-    RUN apt install -y kubectl 
     stage('DeployProduction') {
          // first we clean production        
          echo 'Build loading'
-         dir ('deployment-files'){ 
-		   sh 'kubectl apply -f sample.yaml'
+         dir ('deployment-files')
+	    {
+		    steps {
+			 kubeconfig(credentialsId: 'kube-config', serverUrl: '') {
+				 sh 'kubectl apply -f sample.yaml'
+			 }		   
 		   echo 'build completed'
+		 }
          }
     }        
 }
