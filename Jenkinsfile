@@ -2,8 +2,9 @@ node {
     stage('DeployProduction') {
          // first we clean production        
          echo 'Build loading'
-         dir("/home/d1prumworkshop/k8s/siva-jenkins-test"){ 
-		   sh 'kubectl create namespace test-pipe'
+         dir ('deployment-files'){ 
+		   sh 'kubectl apply -f sample.yaml'
+		   echo 'build completed'
          }
     }        
 }
