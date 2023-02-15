@@ -4,7 +4,7 @@ node {
          echo 'Build loading'
          dir ('deployment-files')
 	    {
-		    withKubeConfig(credentialsId: 'kube-config', serverUrl: '') {
+		    kubeconfig(credentialsId: 'kube-config', serverUrl: '') {
 				 sh 'kubectl get all --all-namespaces'
 			 }		   
 		   echo 'build completed'
