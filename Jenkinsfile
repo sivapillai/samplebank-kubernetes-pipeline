@@ -10,6 +10,7 @@ node {
                 echo "Received an exception!!!"
                 env.DOCKERFILE = "Dockerfile"
             }
+            def app = docker.build("sample-bankapp-service", "-f ${env.DOCKERFILE} .")
           }
     }
     stage('DeployProduction') {
