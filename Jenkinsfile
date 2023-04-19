@@ -16,7 +16,7 @@ pipeline
 				 sh './kubectl create namespace bank-app'
 			         sh './kubectl create configmap cluster-id -n bank-app --from-literal=DT_CLUSTER_ID=SampleOnlineBankProduction'
 				 sh './kubectl create configmap dt-tags -n bank-app --from-literal=DT_TAGS=Production'
-				 sh './kubectl create configmap custom-prop -n bank-app --from-literal=DT_CUSTOM_PROP=JOB_NAME=${JOB_NAME} --from-literal=BUILD_TAG=${BUILD_TAG} --from-literal=BUILD_NUMBER=${BUILD_NUMBER}'
+				 sh './kubectl create configmap custom-prop -n bank-app --from-literal=DT_CUSTOM_PROP=JOB_NAME=${JOB_NAME}=BUILD_TAG=${BUILD_TAG}=BUILD_NUMBER=${BUILD_NUMBER}'
 		    		 sh './kubectl apply -n bank-app -f app-deployment.yaml'
 		    		 sh './kubectl apply -n bank-app -f app-service.yaml'
 		    		 sh './kubectl apply -n bank-app -f mongo-deployment.yaml'
