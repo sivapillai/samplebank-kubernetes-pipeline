@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: deployment-green-test
+ namespace: bank-app
+spec:
+ selector:
+   matchLabels:
+     run: green
+ template:
+   metadata:
+     labels:
+       run: green
+       app.kubernetes.io/version: "v1.0.0"
+       app.kubernetes.io/stage: "Production"
+   spec:
+     containers:
+     - name: frontend
+       image: nikhilgoenka/sample-bank:blue
+       imagePullPolicy: IfNotPresent
+       envFrom:
+       - configMapRef:
+                name: cluster-id
+       - configMapRef:
+                name: dt-tags
+       - configMapRef:
+                name: job-name
+       - configMapRef:
+                name: build-tag
+       - configMapRef:
+                name: build-number
+       ports:
+       - containerPort: 3000
+         protocol: TCP
