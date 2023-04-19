@@ -24,11 +24,7 @@ spec:
        - configMapRef:
                 name: dt-tags
        - configMapRef:
-                name: job-name
-       - configMapRef:
-                name: build-tag
-       - configMapRef:
-                name: build-number
+                name: custom-prop
        ports:
        - containerPort: 3000
          protocol: TCP
