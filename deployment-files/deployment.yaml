@@ -20,6 +20,10 @@ spec:
        imagePullPolicy: IfNotPresent
        envFrom:
        - configMapRef:
+                name: cluster-id
+       - configMapRef:
+                name: dt-tags
+       - configMapRef:
                 name: job-name
        - configMapRef:
                 name: build-tag
