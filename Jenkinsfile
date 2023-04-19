@@ -17,7 +17,7 @@ pipeline
 				 sh './kubectl create configmap dt-tags -n bank-app --from-literal=DT_TAGS=Production'
 				 sh './kubectl create configmap job-name -n bank-app --from-literal=DT_CUSTOM_PROP=JOB_NAME=${JOB_NAME}'
 				 sh './kubectl create configmap build-tag -n bank-app --from-literal=DT_CUSTOM_PROP=BUILD_TAG=${BUILD_TAG}'
-				 sh './kubectl create configmap build-number -n bank-app --from-literal=DT_CUSTOM_PROP=BUILD_NUMBER=${BUIlD_NUMBER}'
+				 sh './kubectl create configmap build-number -n bank-app --from-literal=DT_CUSTOM_PROP=BUILD_NUMBER=${BUILD_NUMBER}'
 		    		 sh 'kubectl apply -n jenkins-test -f app-deployment.yaml'
 		    		 sh 'kubectl apply -n jenkins-test -f app-service.yaml'
 		    		 sh 'kubectl apply -n jenkins-test -f mongo-deployment.yaml'
