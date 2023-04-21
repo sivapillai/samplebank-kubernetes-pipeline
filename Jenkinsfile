@@ -26,7 +26,7 @@ pipeline
 			dir ('dynatrace-scripts') 
 			{
            			// push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
-            			sh './pushdeployment.sh HOST CONTEXTLESS JenkinsInstance ACM_Security_Group ' +
+            			sh './pushdeployment.sh HOST JenkinsInstance ACM_Security_Group ' +
             			'${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
            			'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
 			}
