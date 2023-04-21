@@ -22,7 +22,7 @@ PAYLOAD=$(cat <<EOF
 {  "eventType": "CUSTOM_DEPLOYMENT",
    "title":"Deployment",
   "entitySelector":
-     "type($1), tag($2)",
+     "type($1)",
   "properties": {
     "dt.event.deployment.release_stage":"$6",
     "dt.event.deployment.release_product":"$10",
