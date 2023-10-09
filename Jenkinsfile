@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // Define environment variables here
-        DYNATRACE_API_URL = "${env.DT_URL}"
-        DYNATRACE_API_TOKEN = "${env.DT_TOKEN}"
-    }
-
     stages {
         stage('DeployProduction') {
 		    steps {
@@ -38,7 +32,7 @@ pipeline {
             steps {
                 dir('dynatrace-scripts') {
                     // Execute the Python script as a shell command
-                    sh "python simple_create_slo.py --url ${env.DYNATRACE_API_URL} --token ${env.DYNATRACE_API_TOKEN}"
+                    sh "python simple_create_slo.py ${DT_URL} ${DT_TOKEN}"
                 }
             }
         }
