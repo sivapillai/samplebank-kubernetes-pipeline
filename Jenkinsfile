@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         // Define environment variables here
-        DYNATRACE_API_URL = credentials('DYNATRACE_API_URL')
-        DYNATRACE_API_TOKEN = credentials('DYNATRACE_API_TOKEN')
+        DYNATRACE_API_URL = {env.DT_URL}
+        DYNATRACE_API_TOKEN = {env.DT_TOKEN}
     }
 
     stages {
