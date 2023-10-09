@@ -1,36 +1,46 @@
-pipeline
-{
-  agent any
-  stages
-	{
-      	stage('DeployProduction') 
-	  {
-		steps
-		{
-			dir('deployment-files')
-			{
-	       			 withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'microk8s', contextName: '', credentialsId: 'JenkinsIntegration', namespace: 'kube-system', serverUrl: 'https://172.31.14.130:16443']]) 
-				{
-              			 sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
-             		         sh 'chmod u+x ./kubectl'  
-				 sh './kubectl create namespace bank-app'
-			         sh './kubectl create configmap cluster-id -n bank-app --from-literal=DT_CLUSTER_ID=SampleOnlineBankProduction'
-				 sh './kubectl create configmap dt-tags -n bank-app --from-literal=DT_TAGS=Production'
-				 sh './kubectl create configmap custom-prop -n bank-app --from-literal=DT_CUSTOM_PROP=JOB_NAME=${JOB_NAME}\'  \'BUILD_TAG=${BUILD_TAG}\'  \'BUILD_NUMBER=${BUILD_NUMBER}'
-		    		 sh './kubectl apply -n bank-app -f app-deployment.yaml'
-		    		 sh './kubectl apply -n bank-app -f app-service.yaml'
-		    		 sh './kubectl apply -n bank-app -f mongo-deployment.yaml'
-		    		 sh './kubectl apply -n bank-app -f mongo-service.yaml'
+pipeline {
+    agent any
+
+    environment {
+        // Define environment variables here
+        DYNATRACE_API_URL = credentials('DYNATRACE_API_URL')
+        DYNATRACE_API_TOKEN = credentials('DYNATRACE_API_TOKEN')
+    }
+
+    stages {
+        stage('DeployProduction') {
+		    steps {
+			    dir('deployment-files') {
+                                withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'microk8s', contextName: '', credentialsId: 'JenkinsIntegration', namespace: 'kube-system', serverUrl: 'https://172.31.14.130:16443']]) {
+                                    sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
+                                    sh 'chmod u+x ./kubectl'  
+				    sh './kubectl create namespace bank-app'
+			            sh './kubectl create configmap cluster-id -n bank-app --from-literal=DT_CLUSTER_ID=SampleOnlineBankProduction'
+				    sh './kubectl create configmap dt-tags -n bank-app --from-literal=DT_TAGS=Production'
+				    sh './kubectl create configmap custom-prop -n bank-app --from-literal=DT_CUSTOM_PROP=JOB_NAME=${JOB_NAME}\'  \'BUILD_TAG=${BUILD_TAG}\'  \'BUILD_NUMBER=${BUILD_NUMBER}'
+		    		    sh './kubectl apply -n bank-app -f app-deployment.yaml'
+		    		    sh './kubectl apply -n bank-app -f app-service.yaml'
+		    		    sh './kubectl apply -n bank-app -f mongo-deployment.yaml'
+		    		    sh './kubectl apply -n bank-app -f mongo-service.yaml'
 				}
-			}
-			dir ('dynatrace-scripts') 
-			{
-           			// push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
-            			sh './pushdeployment.sh HOST JenkinsInstance ACM_Security_Group ' +
-            			'${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
-           			'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
-			}
-		}
+			    }
+
+			    dir ('dynatrace-scripts') {
+                    	        // push a deployment event on the host with the tag JenkinsInstance created using automatic tagging rule
+            		        sh './pushdeployment.sh HOST JenkinsInstance ACM_Security_Group ' +
+            		        '${BUILD_TAG} ${BUILD_NUMBER} ${JOB_NAME} ' + 
+           		        'Jenkins ${JENKINS_URL} ${JOB_URL} ${BUILD_URL} ${GIT_COMMIT}'
+			    }
+		    }
         }
-   }
+
+        stage('Create SLO') {
+            steps {
+                dir('dynatrace-scripts') {
+                    // Execute the Python script as a shell command
+                    sh 'python create_slo.py'
+                }
+            }
+        }
+    }
 }
