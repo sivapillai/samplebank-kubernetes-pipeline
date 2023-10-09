@@ -1,9 +1,11 @@
 import requests
 import json
+import os
 
 # API endpoint
-url = ""
-
+url = os.environ.get("DYNATRACE_API_URL")
+dynatrace_api_token = os.environ.get("DYNATRACE_API_TOKEN")
+                     
 # API token
 headers = {
     "Authorization": "",
@@ -22,7 +24,7 @@ slo_payload = {
     "warning": 97.5
 }
 
-print(f"Dynatrace API URL: {dynatrace_api_url}")
+print(f"Dynatrace API URL: {url}")
 
 # Make the API request
 response = requests.post(url, headers=headers, data=json.dumps(slo_payload))
