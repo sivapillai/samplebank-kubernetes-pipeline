@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('dynatrace-scripts') {
                     // Execute the Python script as a shell command
-                    sh 'python create_slo.py'
+                    sh "python simple_create_slo.py --url ${env.DYNATRACE_API_URL} --token ${env.DYNATRACE_API_TOKEN}"
                 }
             }
         }
