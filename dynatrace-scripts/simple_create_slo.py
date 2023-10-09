@@ -1,14 +1,15 @@
 import requests
 import json
-import os
 
-# API endpoint
-url = os.environ.get("DYNATRACE_API_URL")
-dynatrace_api_token = os.environ.get("DYNATRACE_API_TOKEN")
-                     
+DT_URL = sys.argv[1]
+DT_TOKEN = sys.argv[2]
+
 # API token
+query = str(DT_URL) + "/api/v2/slo/"
+token = "Api-Token " + str(DT_TOKEN)
+
 headers = {
-    "Authorization": "",
+    "Authorization": token,
     "Content-Type": "application/json",
 }
 
@@ -25,7 +26,7 @@ slo_payload = {
 }
 
 # Make the API request
-response = requests.post(url, headers=headers, data=json.dumps(slo_payload))
+response = requests.post(query, headers=headers, data=json.dumps(slo_payload))
 
 # Check the response
 if response.status_code == 201:
