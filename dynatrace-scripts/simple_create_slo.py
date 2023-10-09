@@ -22,6 +22,8 @@ slo_payload = {
     "warning": 97.5
 }
 
+print(f"Dynatrace API URL: {dynatrace_api_url}")
+
 # Make the API request
 response = requests.post(url, headers=headers, data=json.dumps(slo_payload))
 
