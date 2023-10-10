@@ -32,7 +32,7 @@ pipeline {
             steps {
                 dir('dynatrace-scripts') {
                     // Execute the Python script as a shell command
-                    sh "/usr/bin/python3 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankStaging DockerService staging"
+                    sh "python3 create_slo.py ${DT_URL} ${DT_TOKEN} SampleOnlineBankStaging DockerService staging"
                 }
             }
         }
